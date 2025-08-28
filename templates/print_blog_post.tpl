@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>
-{if $post_info.use_title eq 'y'}{$post_info.title|escape} {tr}posted by{/tr} {displayname hash=$post_info nolink=TRUE} on {$post_info.publish_date|default:$post_info.created|bit_short_datetime}{else}{$post_info.publish_date|default:$post_info.created|bit_short_datetime} {tr}posted by{/tr} {displayname hash=$post_info}{/if}
+{if $post_info.use_title eq 'y'}{$post_info.title|escape} {tr}posted by{/tr} {displayname hash=$post_info nolink=true} on {$post_info.publish_date|default:$post_info.created|bit_short_datetime}{else}{$post_info.publish_date|default:$post_info.created|bit_short_datetime} {tr}posted by{/tr} {displayname hash=$post_info}{/if}
 </title>
 </head>
 <style type="text/css">

@@ -31,7 +31,7 @@
 							{formfeedback warning=$warning}
 							{formlabel label="Title" for="title"}
 							{forminput}
-								<input type="text" name="title" id="title" value="{if $gContent->getTitle()}{$gContent->getTitle()|escape}{else}{displayname hash=$gBitUser->mInfo nolink=FALSE}'s Blog{/if}" />
+								<input type="text" name="title" id="title" value="{if $gContent->getTitle()}{$gContent->getTitle()|escape}{else}{displayname hash=$gBitUser->mInfo nolink=false}'s Blog{/if}" />
 							{/forminput}
 						</div>
 

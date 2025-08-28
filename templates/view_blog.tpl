@@ -29,7 +29,7 @@
 		{/if}
 	</div>
 
-	<div class="header">
+	<div class="main_header">
 		<h1>{$gContent->getTitle()}</h1>
 		{if $gContent->getField('parsed')}<p>{$gContent->getField('parsed')}</p>{/if}
 		<div class="date">
@@ -43,7 +43,7 @@
 	</div>
 
 	{if $gContent->getField('use_find') eq 'y'}
-		{minifind blog_id=$gContent->mBlogId sort_mode=$smarty.request.sort_mode}
+		{minifind blog_id=$gContent->mBlogId sort_mode=$smarty.request.sort_mode|default:''}
 	{/if}
 		
 	{foreach from=$blogPosts item=aPost}

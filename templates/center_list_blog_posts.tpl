@@ -1,5 +1,5 @@
 {* $Header$ *}
-{if !( $smarty.request.home && $gBitSystem->isFeatureActive('blog_hide_empty_usr_list') ) }
+{if !( $smarty.request.home|default:true && $gBitSystem->isFeatureActive('blog_hide_empty_usr_list') ) }
 <div class="floaticon">{bithelp}</div>
 
 <div class="display blogs">

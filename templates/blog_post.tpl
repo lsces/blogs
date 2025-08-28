@@ -2,7 +2,7 @@
 {strip}
 <div class="edit blogs">
 	<div class="header">
-		{if !$post_info.content_id}
+		{if empty($post_info.content_id)}
 			<h1>{tr}Create Post{/tr}</h1>
 		{else}
 			<h1>{tr}Edit Post{/tr}</h1>
@@ -13,7 +13,7 @@
 		{if $preview eq 'y'}
 			<h2>Preview {$title}</h2>
 			<div class="preview">
-				{include file="bitpackage:blogs/view_blog_post.tpl"}
+				{* include file="bitpackage:blogs/view_blog_post.tpl" *}
 			</div>
 		{/if}
 
@@ -25,20 +25,20 @@
 			{jstabs}
 				{jstab title="Blog Post"}
 					{legend legend="Post"}
-						{if !$blog_data.use_title OR $blog_data.use_title eq 'y'}
+						{* if !$blog_data.use_title || $blog_data.use_title eq 'y' *}
 							<div class="form-group">
 								{formlabel label="Title" for="title"}
 								{forminput}
-									<input type="text" size="50" name="title" id="title" value="{$post_info.title|escape}" />
+									<input type="text" size="50" name="title" id="title" value="{$post_info.title|default:''|escape}" />
 									{formhelp note="When you leave the title blank, the current date will be substituted automagically."}
 								{/forminput}
 							</div>
-						{/if}
+						{* /if *}
 
 							<div class="form-group">
 								{formlabel label="Summary" for="summary"}
 								{forminput}
-									<input type="text" size="50" name="summary" id="summary" value="{$post_info.summary|escape}" />
+									<input type="text" size="50" name="summary" id="summary" value="{$post_info.summary|default:''|escape}" />
 									{formhelp note="Description used in listings and search results. If left empty, the first few sentences of the body text will be used."}
 								{/forminput}
 							</div>
@@ -53,7 +53,7 @@
 							{formhelp note="Text entered here will be displayed in the full blog post, commonly known as the Read More section."}
 							{textarea id="edit_body" name="edit_body" noformat="y" edit=$post_info.raw_more}
 						{else}
-							{textarea  edit=$post_info.raw}
+							{textarea  edit=$post_info.raw|default:''}
 						{/if}
 
 						{if $availableBlogs}
@@ -63,12 +63,12 @@
 									{if count($availableBlogs) > 10}
 										<select name="blog_content_id[]" size="6" id="blog_id" multiple="multiple">
 											{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-												<option value="{$blogContentId}" {if $gContent->mInfo.blogs.$blogContentId || $blogContentId == $smarty.request.blog_id}selected="selected"{/if}>{$availBlogTitle|escape}</option>
+												<option value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) || $blogContentId == $smarty.request.blog_id}selected="selected"{/if}>{$availBlogTitle|escape}</option>
 											{/foreach}
 										</select>
 									{else}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											<input name="blog_content_id[]" type="checkbox" value="{$blogContentId}" {if $gContent->mInfo.blogs.$blogContentId || $blogContentId == $smarty.request.blog_id || $blogContentId == $default_target_blog_content_id}checked="checked"{/if} /> {$availBlogTitle|escape}<br/>
+											<input name="blog_content_id[]" type="checkbox" value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) || $blogContentId == $smarty.request.blog_id or $blogContentId == $default_target_blog_content_id}checked="checked"{/if} /> {$availBlogTitle|escape}<br/>
 										{/foreach}
 									{/if}
 									{formhelp note="You can cross post to any and all of the blogs listed above.<br />Just check off the blogs you wish this post to also show up in."}
@@ -80,11 +80,6 @@
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl" edit_content_status_tpl="bitpackage:blogs/edit_blogpost_status_inc.tpl"}
 
 						{include file="bitpackage:liberty/edit_storage_list.tpl"}
-
-						<div class="form-group submit">
-							<input type="submit" class="btn btn-default" name="preview" value="{tr}Preview{/tr}" />&nbsp;
-							<input type="submit" class="btn btn-default" name="save_post_exit" value="{tr}Save{/tr}" />
-						</div>
 					{/legend}
 				{/jstab}
 
@@ -104,8 +99,8 @@
 							<input type="hidden" name="publishDateInput" value="1" />
 							{formlabel label="Publish Date" for=""}
 							{forminput}
-								{html_select_date prefix="publish_" time=$post_info.publish_date start_year="-5" end_year="+10"} {tr}at{/tr}&nbsp;
-								<span dir="ltr">{html_select_time prefix="publish_" time=$post_info.publish_date display_seconds=false}&nbsp;{$siteTimeZone}</span>
+								{html_select_date prefix="publish_" time=$post_info.publish_date|default:0 start_year="-1" end_year="+10"} at&nbsp;
+								<span dir="ltr">{html_select_time prefix="publish_" time=$post_info.publish_date|default:0 display_seconds=false}&nbsp;{$siteTimeZone}</span>
 								{formhelp note="This post will not be displayed <strong>before</strong> this date."}
 							{/forminput}
 						</div>
@@ -114,8 +109,8 @@
 							<input type="hidden" name="expireDateInput" value="1" />
 							{formlabel label="Expiration Date" for=""}
 							{forminput}
-								{html_select_date prefix="expire_" time=$post_info.expire_date start_year="-5" end_year="+10"} {tr}at{/tr}&nbsp;
-								<span dir="ltr">{html_select_time prefix="expire_" time=$post_info.expire_date display_seconds=false}&nbsp;{$siteTimeZone}</span>
+								{html_select_date prefix="expire_" time=$post_info.expire_date|default:0 start_year="+5" end_year="+10"} at&nbsp;
+								<span dir="ltr">{html_select_time prefix="expire_" time=$post_info.expire_date|default:0 display_seconds=false}&nbsp;{$siteTimeZone}</span>
 								{formhelp note="If this date is set after the publish date, this post will not be displayed <strong>after</strong> the expiration date."}
 							{/forminput}
 						</div>
@@ -131,6 +126,10 @@
 						</div>
 					{/legend}
 				{/jstab}
+				<div class="form-group submit">
+					<input type="submit" class="btn btn-default" name="preview" value="Preview" />&nbsp;
+					<input type="submit" class="btn btn-default" name="save_post_exit" value="Save" />
+				</div>
 			{/jstabs}
 		{/form}
 	</div><!-- end .body -->

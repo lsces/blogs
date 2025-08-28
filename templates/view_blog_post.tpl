@@ -1,4 +1,6 @@
-{if !($liberty_preview or $preview)}
+{* $Header$ *}
+{if empty($print_page)}{assign var=print_page value=false}{/if}
+{if !empty($liberty_preview) or !empty($preview)}
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -6,7 +8,7 @@
 <rdf:Description
     rdf:about="{$uri}"
     dc:identifer="{$uri}"
-    dc:title="{if $post_info.use_title eq 'y'}{$post_info.title|escape} {tr}posted by{/tr} {$post_info.user} on {$post_info.publish_date|default:$post_info.created|bit_short_datetime}{else}{$post_info.publish_date|default:$post_info.created|bit_short_datetime} {tr}posted by{/tr} {$post_info.user}{/if}"
+    dc:title="{if $post_info.use_title eq 'y'}{$post_info.title|escape} posted by {$post_info.user} on {$post_info.publish_date|default:$post_info.created|bit_short_datetime}{else}{$post_info.publish_date|default:$post_info.created|bit_short_datetime} posted by {$post_info.user}{/if}"
     trackback:ping="{$uri2}" />
 </rdf:RDF>
 -->
@@ -16,7 +18,7 @@
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$post_info}
 
 <div class="display blogs">
-	{if !($liberty_preview)}
+	{if empty($liberty_preview)}
 		{if !($preview)}
 			<div class="floaticon">
 				{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$post_info}
@@ -43,10 +45,11 @@
 				{/if}
 			</div>
 		{/if}
+	{/if}
 
-		<div class="header">
-			{if $post_info.blogtitle}
-				<h1>{$post_info.blogtitle|escape}</h1>
+		<div class="main_header">
+			{if !empty($post_info.blogtitle)}
+				<h1>{$post_info.blogtitle|escape|highlight}</h1>
 			{/if}
 
 			<div class="navigation">
@@ -65,7 +68,7 @@
 
 			<h1>
 				{if $post_info.use_title eq 'y' && $post_info.title}
-					{$post_info.title|escape}
+					{$post_info.title|escape|highlight}
 				{else}
 					{$post_info.publish_date|default:$post_info.created|bit_long_date}
 				{/if}
@@ -82,12 +85,12 @@
 				<br />
 				{/if}
 			</div>
+			{if ( !empty( $highlightWordList) ) }{$highlightWordList}{/if}
 		</div>
-	{/if}
 
 	<div class="body"
 	    {if $gBitUser->getPreference( 'users_double_click' ) eq 'y' and (($ownsblog eq 'y') or $gContent->hasUserPermission( 'p_blogs_admin' ))}
-			ondblclick="location.href='{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$post_info.blog_id}&amp;post_id={$post_info.post_id}';"
+			ondblclick="location.href='{$smarty.const.BLOGS_PKG_URL}post.php?post_id={$post_info.post_id}';"
 		{/if}
 	>
 		<div class="content">
@@ -100,13 +103,13 @@
 				</div>
 			{/if}
 
-			{$parsed_data}
+			{$parsed_data|highlight}
 		</div> <!-- end .content -->
 	</div> <!-- end .body -->
 
 	<div class="footer">
 		<a href="{$post_info.display_url}" rel="bookmark">{tr}Permalink{/tr}</a>
-		{assign var=spacer value=TRUE}
+		{assign var=spacer value=true}
 		{if $post_info.trackbacks_from_count > 0}
 			{if $spacer}&nbsp; &bull; &nbsp;{/if}
 			{tr}referenced by{/tr} {$post_info.trackbacks_from_count} {tr}posts{/tr}
@@ -123,7 +126,7 @@
 		{/if}
 	</div> {* end .footer *}
 
-	{if $pages > 1}
+	{if !empty($pages) and $pages > 1}
 		<div class="pagination">
 			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$first_page}">{biticon ipackage="icons" iname="go-first" iexplain="first page"}</a>
 			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$prev_page}">{booticon iname="icon-arrow-left"  ipackage="icons"  iexplain="previous page"}</a>
@@ -153,7 +156,7 @@
 	{/if}
 </div> {* end .blog *}
 
-{if $print_page ne 'y' and $gBitSystem->isFeatureActive( 'blog_posts_comments' ) and !$preview and !$liberty_preview}
+{if $gBitSystem->isFeatureActive( 'blog_posts_comments' ) and !empty($preview) and !empty($liberty_preview)}
 	{include file="bitpackage:liberty/comments.tpl"}
 {/if}
 

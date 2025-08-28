@@ -3,23 +3,22 @@
  * @version $Header$
  * @package bitweaver
  */
-global $gBitSmarty, $gBlog, $gBitSystem, $moduleParams, $gBitUser;
-if( !empty( $moduleParams ) ) {
-	extract( $moduleParams );
-}
+use Bitweaver\Blogs\BitBlogPost;
+use Bitweaver\Users\RoleUser;
 
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
-include_once( BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php' );
+global $moduleParams;
+
+include_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
 
 $blogPost = new BitBlogPost();
 if( empty( $gContent )) {
-	$gBitSmarty->assignByRef( 'gContent', $blogPost );
+	$gBitSmarty->assign( 'gContent', $blogPost );
 }
 
 if( $gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin() ) {
-	$futuresHash = array();
+	$futuresHash = [];
     $futuresHash['max_records'] = !empty( $_REQUEST['max_records'] ) ? $_REQUEST['max_records'] : $gBitSystem->getConfig( 'blog_posts_max_list' );
-    $futuresHash['get_future'] = TRUE;
+    $futuresHash['get_future'] = true;
 	if( empty( $futuresHash['user_id'] )) {
 		if( !empty( $gQueryUserId )) {
 			$futuresHash['user_id'] = $gQueryUserId;
@@ -28,10 +27,10 @@ if( $gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin
 		}
 	}
 	// prevent anything lower than publicly visible be displayed in blog roll
-	$futuresHash['enforce_status'] = TRUE;
+	$futuresHash['enforce_status'] = true;
 	$futuresHash['min_owner_status_id'] = 0;
     $futures = $blogPost->getFutureList( $futuresHash );
-    $gBitSmarty->assign( 'futures', $futures['data']);
+    $gBitSmarty->assign( 'futures', $futures['data'] ?? []);
 } else {
     $_REQUEST['max_records'] = $gBitSystem->getConfig( 'blog_posts_max_list' );
 }
@@ -41,22 +40,22 @@ if( $gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin
 $listHash = $module_params;
 $listHash = array(
 	'max_records'   => $module_rows,
-	'parse_data'    => TRUE,
-	'load_comments' => TRUE,
+	'parse_data'    => true,
+	'load_comments' => true,
 );
 */
 
-$listHash = array();
-if( !empty( $moduleParams )) {
-	$listHash = array_merge( $_REQUEST, $moduleParams['module_params'] );
-	$listHash['max_records'] = $module_rows;
-	//$listHash['parse_data'] = TRUE;
-	//$listHash['load_comments'] = TRUE;
+$listHash = [];
+if( !empty( $moduleParams->values )) {
+	$listHash = array_merge( $_REQUEST, $moduleParams->values );
+	$listHash['max_records'] = $moduleParams->values['module_rows'];
+	//$listHash['parse_data'] = true;
+	//$listHash['load_comments'] = true;
 } else {
     $listHash = $_REQUEST;
 }
 
-BitUser::userCollection( $_REQUEST, $listHash );
+RoleUser::userCollection( $_REQUEST, $listHash );
 
 if ( empty( $listHash['sort_mode'] ) ){
 	$listHash['sort_mode'] = 'sort_date_desc';
@@ -75,12 +74,12 @@ $paginationPath = BLOGS_PKG_URL.'index.php';
  */
 
 if ( !empty( $module_params ) && !empty( $module_params['blog_id'] ) ){
-	$_template->tpl_vars['blogId'] = new Smarty_variable( $module_params['blog_id']  );
+	$gBitSmarty->assign( 'blogId', $module_params['blog_id']  );
 	$paginationPath = BLOGS_PKG_URL.'view.php';
 }
 
 // prevent anything lower than publicly visible be displayed in blog roll
-$listHash['enforce_status'] = TRUE;
+$listHash['enforce_status'] = true;
 $listHash['min_owner_status_id'] = 0;
 
 /* I think this is right - usually we pass in $_REQUEST
@@ -89,15 +88,14 @@ $listHash['min_owner_status_id'] = 0;
  */
 $blogPost->invokeServices( 'content_list_function', $listHash );
 $blogPosts = $blogPost->getList( $listHash );
-$_template->tpl_vars['paginationPath'] = new Smarty_variable( $paginationPath );
-$_template->tpl_vars['gQueryUserId'] = new Smarty_variable( $listHash['user_id'] );
-$_template->tpl_vars['blogPosts'] = new Smarty_variable( $blogPosts );
+$gBitSmarty->assign( 'paginationPath', $paginationPath );
+$gBitSmarty->assign( 'gQueryUserId', $listHash['user_id'] ?? 0 );
+$gBitSmarty->assign( 'blogPosts', $blogPosts );
 
-$_template->tpl_vars['listInfo'] = new Smarty_variable( $listHash );
-$_template->tpl_vars['descriptionLength'] = new Smarty_variable( $gBitSystem->getConfig( 'blog_posts_description_length', 500 ));
-$_template->tpl_vars['showDescriptionsOnly'] = new Smarty_variable( TRUE );
-$_template->tpl_vars['showBlogTitle'] = new Smarty_variable( 'y' );
-$_template->tpl_vars['blogPostsFormat'] = new Smarty_variable( (empty($module_params['format']) ? 'full' : $module_params['format']) );
+$gBitSmarty->assign( 'listInfo', $listHash );
+$gBitSmarty->assign( 'descriptionLength', $gBitSystem->getConfig( 'blog_posts_description_length', 500 ));
+$gBitSmarty->assign( 'showDescriptionsOnly', true );
+$gBitSmarty->assign( 'showBlogTitle', 'y' );
+$gBitSmarty->assign( 'blogPostsFormat', empty( $module_params['format'] ) ? 'full' : $module_params['format'] );
 // unfortunately, the following feature pulls module parameters in from other modules
 //$gBitSmarty->assign( 'centerTitle', $moduleParams['title'] );
-?>

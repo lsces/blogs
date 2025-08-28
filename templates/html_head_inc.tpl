@@ -20,10 +20,10 @@
  * needed for your site configuation by creating a custom version of this tpl in your theme. Target the 
  * conditionals to the pkg you are including center_list_blog_posts in.
  *}
-{if $ajax_more}
+{if !empty($ajax_more)}
 {* @TODO develop custom callback - for now override ajax callback for cool scroll effect *}
 {literal}
-<script type="text/javascript">/* <![CDATA[ */
+<script>/* <![CDATA[ */
 	BitAjax.updaterCallback = function(target, rslt){
 		BitBase.hideSpinner();
 		var e = document.getElementById(target);

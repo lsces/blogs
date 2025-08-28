@@ -16,8 +16,8 @@
 								{formlabel label="Blogs this Post is Already Crossposted To" for="blog_id"}
 								{forminput}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											{if $gContent->mInfo.blogs.$blogContentId && ($blogContentId != $crosspost.blog_content_id) }
-												{assign var="has_crosspost" value=TRUE}
+											{if $gContent->mInfo.blogs.$blogContentId and ($blogContentId != $crosspost.blog_content_id) }
+												{assign var="has_crosspost" value=true}
 												{$availBlogTitle|escape}
 												&nbsp;<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?blog_content_id={$blogContentId}&amp;post_id={$post_info.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit crosspost note"}</a>
 												&nbsp;<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?action=remove&amp;post_id={$post_info.post_id}&amp;blog_content_id={$blogContentId}&amp;status_id=300">{booticon iname="icon-trash" ipackage="icons" iexplain="delete this crossposting"}</a><br/>
@@ -38,7 +38,7 @@
 								{forminput}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
 											{if !$gContent->mInfo.blogs.$blogContentId || ($blogContentId == $crosspost.blog_content_id) }
-												{assign var="has_crosspost_option" value=TRUE}
+												{assign var="has_crosspost_option" value=true}
 												<input name="blog_content_id[]" type="checkbox" option value="{$blogContentId}" {if $blogContentId == $crosspost.blog_content_id}checked="checked"{/if}>{$availBlogTitle|escape}</option><br/>
 											{/if}
 										{/foreach}
@@ -51,11 +51,11 @@
 							</div>
 						{/if}
 
-						{if $has_crosspost_option}
+						{* if $has_crosspost_option}
 						{formlabel label="Crosspost Note Format"}
 							{forminput}
 								{foreach name=formatPlugins from=$gLibertySystem->mPlugins item=plugin key=guid}
-									{if $plugin.edit_field eq $post_info.format_guid}
+									{if $plugin.edit_field|default:'' eq $post_info.format_guid}
 										{$plugin.edit_label}
 									{/if}
 								{/foreach}
@@ -66,7 +66,7 @@
 								<input type="submit" class="btn btn-default" name="preview" value="{tr}Preview{/tr}" />&nbsp;
 								<input type="submit" class="btn btn-default" name="save_post_exit" value="{tr}Save{/tr}" />
 							</div>
-						{/if}
+						{/if *}
 					{/legend}
 		{/form}
 
@@ -76,9 +76,9 @@
 		<div class="display blogs">
 			<div class="header">
 
-				<h1>
-					{$post_info.blogtitle|escape}
-				</h1>
+				{if !empty($post_info.blogtitle)}
+					<h1>{$post_info.blogtitle|escape}</h1>
+				{/if}
 
 				<div class="navigation">
 					{if $gContent_previous}
