@@ -2,7 +2,7 @@
 {* This template is used by the blogs plugin to liberty. *}
 <div class="post"
 	{if $gBitUser->getPreference( 'users_double_click' ) and (($aPost.ownsblog eq 'y') or ($gBitUser->mUserId and $aPost.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' ))}
-		ondblclick="location.href='{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id}{$blog_id}&amp;post_id={$aPost.post_id}{$post_id}';"
+		ondblclick="location.href='{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}{$blog_id}&amp;post_id={$aPost.post_id}{$post_id}';"
 	{/if}
 >
 	{if $gBitUser->hasPermission( 'p_users_view_icons_and_tools' )}
@@ -18,7 +18,7 @@
 			{/if}
 
 			{if ($aPost.ownsblog eq 'y') or ($gBitUser->mUserId and $aPost.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' )}
-				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id}&amp;post_id={$aPost.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
+				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
 				<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$aPost.post_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
 			{/if}
 		</div>
@@ -78,7 +78,7 @@
 		</div><!-- end .content -->
 
 		{if $aPost.pages > 1}
-			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$aPost.blog_id}&amp;post_id={$aPost.post_id}">{tr}read more{/tr} ({$aPost.pages} {tr}pages{/tr})</a>
+			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{tr}read more{/tr} ({$aPost.pages} {tr}pages{/tr})</a>
 		{/if}
 	</div> <!-- end .body -->
 
@@ -90,7 +90,7 @@
 			{if $spacer}&nbsp; &bull; &nbsp;{/if}
 			{assign var=spacer value=true}
 			{if $ajax_more}
-				<a href="javascript:void(0);" onclick="BitAjax.updater( 'post_more_{$aPost.post_id}', '{$smarty.const.BLOGS_PKG_URL}view_post.php', 'blog_id={$aPost.blog_id}&post_id={$aPost.post_id}&format={if $aPost.summary}data{else}more{/if}&output=ajax' )">{tr}Read More{/tr}</a>
+				<a href="javascript:void(0);" onclick="BitAjax.updater( 'post_more_{$aPost.post_id}', '{$smarty.const.BLOGS_PKG_URL}view_post.php', 'blog_id={$aPost.blog_id|default:0}&post_id={$aPost.post_id}&format={if $aPost.summary}data{else}more{/if}&output=ajax' )">{tr}Read More{/tr}</a>
 			{else}
 				<a class="more" href="{$aPost.display_url}">{tr}Read More&hellip;{/tr}</a>
 			{/if}
