@@ -8,8 +8,11 @@
 /**
  * required setup
  */
-require_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php');
-require_once( LIBERTY_PKG_CLASS_PATH.'LibertyComment.php');
+namespace Bitweaver\Blogs;
+use Bitweaver\BitBase;
+use Bitweaver\Liberty\LibertyContent;
+use Bitweaver\Liberty\LibertyMime;
+use Bitweaver\Users\RolePermUser;
 
 define( 'BITBLOG_CONTENT_TYPE_GUID', 'bitblog' );
 
@@ -19,17 +22,24 @@ define( 'BITBLOG_CONTENT_TYPE_GUID', 'bitblog' );
 class BitBlog extends LibertyMime {
 	public $mBlogId;
 
-	function __construct( $pBlogId=NULL, $pContentId=NULL ) {
-		$this->mBlogId = @$this->verifyId( $pBlogId ) ? $pBlogId : NULL;
-		parent::__construct( $pContentId );
-		$this->registerContentType( BITBLOG_CONTENT_TYPE_GUID, array(
+	public function __construct( $pBlogId = 0, $pContentId = 0 ) {
+		if ( is_array($pBlogId) ) {
+			$firstEntry = current($pBlogId);
+			$this->mBlogId = $this->verifyId( $firstEntry['blog_id'] );
+			$this->mContentId = $this->verifyId( $firstEntry['blog_content_id'] );
+		} else {
+			$this->mBlogId = $this->verifyId( $pBlogId ) ? $pBlogId : 0;
+		}
+		
+		parent::__construct();
+		$this->registerContentType( BITBLOG_CONTENT_TYPE_GUID, [
 			'content_type_guid' => BITBLOG_CONTENT_TYPE_GUID,
 			'content_name' => 'Blog',
 			'handler_class' => 'BitBlog',
 			'handler_package' => 'blogs',
 			'handler_file' => 'BitBlog.php',
 			'maintainer_url' => 'http://www.bitweaver.org'
-		) );
+		] );
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITBLOG_CONTENT_TYPE_GUID;
 
@@ -40,18 +50,18 @@ class BitBlog extends LibertyMime {
 		$this->mAdminContentPerm = 'p_blogs_admin';
 	}
 
-	function get_num_user_blogs($user_id) {
-		$ret = NULL;
+	public function get_num_user_blogs($user_id) {
+		$ret = null;
 		if ($user_id) {
 			$sql = "SELECT COUNT(*) FROM `".BIT_DB_PREFIX."blogs` WHERE `user_id` = ?";
-			$ret = $this->mDb->getOne($sql, array( $user_id ));
+			$ret = $this->mDb->getOne($sql, [ $user_id ]);
 		}
 		return $ret;
 	}
 
 	public static function getDisplayUrlFromHash( &$pParamHash ) {
 		global $gBitSystem;
-		$ret = NULL;
+		$ret = null;
 
 		if ( BitBase::verifyIdParameter( $pParamHash, 'blog_id' ) ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
@@ -67,10 +77,10 @@ class BitBlog extends LibertyMime {
 		return $ret;
 	}
 
-	function getDisplayUrl() {
-		$ret = NULL;
+	public function getDisplayUrl() {
+		$ret = null;
 		if( $this->isValid() ) {
-			$hash = array ( 'blog_id' => $this->mBlogId );
+			$hash = [ 'blog_id' => $this->mBlogId ];
 			$ret = self::getDisplayUrlFromHash( $hash );
 		}
 		return $ret;
@@ -78,28 +88,29 @@ class BitBlog extends LibertyMime {
 
 	/**
 	* Check if there is an article loaded
-	* @return bool TRUE on success, FALSE on failure
+	* @return bool true on success, false on failure
 	* @access public
 	**/
-	function isValid() {
-		return( $this->verifyId( $this->mBlogId ) && $this->verifyId( $this->mContentId ) );
+	public function isValid() {
+		return $this->verifyId( $this->mBlogId ) && $this->verifyId( $this->mContentId );
 	}
 
-	function load( $pContentId = NULL, $pPluginParams = NULL ) {
+	public function load() {
 		if ( $this->getBlog( $this->mBlogId, $this->mContentId ) ) {
 			$this->mContentId = $this->getField( 'content_id' );
 			$this->mBlogId = $this->getField('blog_id');
 		}
+		return true;
 	}
 
 
 	/*shared*/
-	function getBlog( $pBlogId, $pContentId = NULL ) {
+	public function getBlog( $pBlogId, $pContentId = null ) {
 		global $gBitSystem;
-		$ret = NULL;
+		$ret = null;
 
-		$lookupId = (!empty( $pBlogId ) ? $pBlogId : $pContentId);
-		$lookupColumn = (!empty( $pBlogId ) ? 'blog_id' : 'content_id');
+		$lookupId = !empty( $pBlogId ) ? $pBlogId : $pContentId;
+		$lookupColumn = !empty( $pBlogId ) ? 'blog_id' : 'content_id';
 
 		$bindVars = array( (int)$lookupId );
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
@@ -126,8 +137,8 @@ class BitBlog extends LibertyMime {
 				$this->mContentId = $this->getField( 'content_id' );
 				$this->mBlogId = $this->getField('blog_id');
 				foreach( array( 'avatar', 'image' ) as $img ) {
-					$this->mInfo[$img] = liberty_fetch_thumbnails( array(
-						'source_file' => $this->getSourceFile( array( 'user_id'=>$this->getField( 'user_id' ), 'package'=>liberty_mime_get_storage_sub_dir_name( array( 'type' => $this->getField( $img.'_mime_type' ), 'name' =>  $this->getField( $img.'_file_name' ) ) ), 'file_name' => basename( $this->mInfo[$img.'_file_name'] ), 'sub_dir' =>  $this->getField( $img.'_attachment_id' ) ) )
+					$this->mInfo[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( array(
+						'source_file' => $this->getSourceFile( array( 'user_id'=>$this->getField( 'user_id' ), 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( array( 'type' => $this->getField( $img.'_mime_type' ), 'name' =>  $this->getField( $img.'_file_name' ) ) ), 'file_name' => basename( $this->mInfo[$img.'_file_name'] ?? '' ), 'sub_dir' =>  $this->getField( $img.'_attachment_id' ) ) )
 					));
 				}
 				parent::load();
@@ -137,10 +148,10 @@ class BitBlog extends LibertyMime {
 		return count( $this->mInfo ) != 0;
 	}
 
-	function verify( &$pParamHash ) {
+	public function verify( array &$pParamHash ): bool {
 		global $gBitUser;
 
-		$pParamHash['blog_store']['max_posts'] = !empty( $pParamHash['max_posts'] ) && is_numeric( $pParamHash['max_posts'] ) ? $pParamHash['max_posts'] : NULL;
+		$pParamHash['blog_store']['max_posts'] = !empty( $pParamHash['max_posts'] ) && is_numeric( $pParamHash['max_posts'] ) ? $pParamHash['max_posts'] : null;
 		$pParamHash['blog_store']['use_title'] = isset( $pParamHash['use_title'] ) ? 'y' : 'n';
 		$pParamHash['blog_store']['allow_comments'] = isset( $pParamHash['allow_comments'] ) ? 'y' : 'n';
 		$pParamHash['blog_store']['use_find'] = isset( $pParamHash['use_find'] ) ? 'y' : 'n';
@@ -150,10 +161,10 @@ class BitBlog extends LibertyMime {
 			parent::verify( $pParamHash );
 		}
 
-		return( count( $this->mErrors ) == 0 );
+		return count( $this->mErrors ) == 0;
 	}
 
-	function store( &$pParamHash ) {
+	public function store( array &$pParamHash ): bool {
 		global $gBitSystem;
 		$this->StartTrans();
 		if( $this->verify( $pParamHash ) && parent::store( $pParamHash ) ) {
@@ -164,22 +175,19 @@ class BitBlog extends LibertyMime {
 				// DEPRECATED - this looks stupid -wjames5
 				//$pParamHash['blog_store']['posts'] = 0;
 				$pParamHash['blog_store']['content_id'] = $this->mContentId;
-				if( isset( $pParamHash['blog_id'] )&& is_numeric( $pParamHash['blog_id'] ) ) {
 					// if pParamHash['blog_id'] is set, someone is requesting a particular blog_id. Use with caution!
-					$pParamHash['blog_store']['blog_id'] = $pParamHash['blog_id'];
-				} else {
-					$pParamHash['blog_store']['blog_id'] = $this->mDb->GenID( 'blogs_blog_id_seq' );
-				}
+					$pParamHash['blog_store']['blog_id'] = isset( $pParamHash['blog_id'] ) && is_numeric( $pParamHash['blog_id'] ) 
+						? $pParamHash['blog_id'] : $this->mDb->GenID( 'blogs_blog_id_seq' );
+
 				$this->mBlogId = $pParamHash['blog_store']['blog_id'];
 				$result = $this->mDb->associateInsert( $table, $pParamHash['blog_store'] );
 			}
 			$this->CompleteTrans();
 		}
-		return( count( $this->mErrors ) == 0 );
+		return count( $this->mErrors ) == 0;
 	}
 
-	function expunge() {
-		$ret = FALSE;
+	public function expunge(): bool {
 		if ( $this->isValid() ) {
 			$this->StartTrans();
 
@@ -188,24 +196,23 @@ class BitBlog extends LibertyMime {
 			$result = $this->mDb->query( $query_map, array( $this->mContentId ) );
 
 			$query = "DELETE from `".BIT_DB_PREFIX."blogs` where `content_id`=?";
-			$result = $this->mDb->query( $query, array( (int)$this->mContentId ) );
+			$result = $this->mDb->query( $query, [ (int) $this->mContentId ] );
 
 			if( parent::expunge() ) {
-				$ret = TRUE;
 				$this->mDb->CompleteTrans();
 			} else {
 				$this->mDb->RollbackTrans();
 			}
 			$this->CompleteTrans();
 		}
-		return $ret;
+		return true;
 	}
 
-	function getPost( $pListHash=array() ) {
-		$ret = NULL;
-		$bindVars = array();
+	public function getPost( $pListHash=[] ) {
+		$ret = null;
+		$bindVars = [];
 
-		$blogId = (!empty( $pListHash['blog_id'] ) ? $pListHash['blog_id'] : $this->mBlogId);
+		$blogId = !empty( $pListHash['blog_id'] ) ? $pListHash['blog_id'] : $this->mBlogId;
 
 		if ( BitBase::verifyId( $blogId ) ) {
 			$this->prepGetList( $pListHash );
@@ -217,7 +224,7 @@ class BitBlog extends LibertyMime {
 					WHERE b.`blog_id` = ? ORDER BY ".$this->mDb->convertSortMode( $pListHash['sort_mode'] );
 			if( $postId = $this->mDb->getOne($sql, array( $blogId ) ) ) {
 				$blogPost = new BitBlogPost( $postId );
-				$blogPost->load( NULL, $pListHash );
+				$blogPost->load( null, $pListHash );
 				$ret = $blogPost;
 			}
 		}
@@ -225,13 +232,13 @@ class BitBlog extends LibertyMime {
 	}
 
 	// BLOG METHODS ////
-	function getList( &$pParamHash ) {
+	public function getList( &$pParamHash ) {
 		global $gBitSystem;
 
 		LibertyContent::prepGetList( $pParamHash );
 
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
-		$bindVars = array();
+		$bindVars = [];
 //		array_push( $bindVars, $this->mContentTypeGuid );
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
@@ -247,7 +254,7 @@ class BitBlog extends LibertyMime {
 				$bindVars=array($findesc,$findesc);
 			}
 		}
-		if( @$this->verifyId( $pParamHash['user_id'] ) ) {
+		if( @$this->verifyId( $pParamHash['user_id'] ?? 0 ) ) {
 			$whereSql .= " AND uu.`user_id` = ? ";
 			$bindVars[] = $pParamHash['user_id'];
 		}
@@ -255,11 +262,11 @@ class BitBlog extends LibertyMime {
 		$this->getServicesSql( 'content_user_collection_function', $selectSql, $joinSql, $whereSql, $bindVars, $this, $pListHash );
 
 		if( !empty( $pParamHash['is_active'] ) ) {
-			$whereSql .= " AND b.`activity` IS NOT NULL";
+			$whereSql .= " AND b.`activity` IS NOT null";
 		}
 
 		if( !empty( $pParamHash['is_hit'] ) ) {
-			$whereSql .= " AND lch.`hits` IS NOT NULL";
+			$whereSql .= " AND lch.`hits` IS NOT null";
 		}
 
 		if( !empty( $pParamHash['content_perm_name'] ) ) {
@@ -271,10 +278,10 @@ class BitBlog extends LibertyMime {
 		}
 
 
-		$ret = array();
+		$ret = [];
 
 		// Return a data array, even if empty
-		$pParamHash["data"] = array();
+		$pParamHash["data"] = [];
 
 		# Get count of total number of items available
 		$query_cant = "
@@ -308,7 +315,7 @@ class BitBlog extends LibertyMime {
 			$whereSql order by ".$this->mDb->convertSortmode($pParamHash['sort_mode']);
 
 		$result = $this->mDb->query( $query, $bindVars, $pParamHash['max_records'], $pParamHash['offset'] );
-		$ret = array ();
+		$ret = [];
 		while ($res = $result->fetchRow()) {
 			$blogContentId = $res['content_id'];
 			$ret[$blogContentId] = $res;
@@ -327,13 +334,13 @@ class BitBlog extends LibertyMime {
 		return $ret;
 	}
 
-	function getPostsCount($pBlogContentId){
+	public function getPostsCount($pBlogContentId){
 		global $gBitSystem;
-		$ret = NULL;
+		$ret = null;
 		if( @$this->verifyId( $pBlogContentId ) ) {
 			$whereSql = 'bpm.`blog_content_id` = ?';
 			$bindVars = array((int)$pBlogContentId);
-			BitBlogPost::getDateRestrictions(array(), $whereSql, $bindVars);
+			BitBlogPost::getDateRestrictions([], $whereSql, $bindVars);
 			$query = "SELECT COUNT(*)
 				FROM `".BIT_DB_PREFIX."blogs_posts_map` bpm
 				INNER JOIN `".BIT_DB_PREFIX."blog_posts` bp ON (bpm.`post_content_id`=bp.`content_id`)
@@ -347,13 +354,13 @@ class BitBlog extends LibertyMime {
 	}
 
 	//This doesnt even appear to be used in blogs before this refactoring -wjames5
-	function viewerCanPostIntoBlog() {
+	public function viewerCanPostIntoBlog() {
 		global $gBitUser;
-		return ($this->getField('user_id') == $gBitUser->mUserId || $gBitUser->isAdmin() || $this->getField('is_public') == 'y' );
+		return $this->getField('user_id') == $gBitUser->mUserId || $gBitUser->isAdmin() || $this->getField('is_public') == 'y' ;
 	}
 
-	function hasPostPermission() {
-		$ret = FALSE;
+	public function hasPostPermission() {
+		$ret = false;
 		if( $this->isValid() ) {
 			// for now just check edit permission, however eventually we'll want to separate this notion so blog editors and posters can be distinguished
 			$ret = $this->hasUpdatePermission();
@@ -361,16 +368,16 @@ class BitBlog extends LibertyMime {
 		return $ret;
 	}
 
-	function viewerHasPermission($pPermName = NULL) {
+	public function viewerHasPermission($pPermName = null) {
 		global $gBitUser;
-		$ret = FALSE;
+		$ret = false;
 		if ($gBitUser->mUserId && $pPermName) {
 			$ret = $gBitUser->object_has_permission( $gBitUser->mUserId, $this->mInfo['blog_id'], $this->getContentType(), $pPermName );
 		}
 		return $ret;
 	}
 
-	function getViewTemplate( $pAction ){
+	public function getViewTemplate( $pAction ){
 		$ret = null;
 		switch ( $pAction ){
 			case "view":
@@ -387,13 +394,13 @@ class BitBlog extends LibertyMime {
 	 * getContentStatus
 	 *
 	 * @access public
-	 * @return an array of content_status_id, content_status_names the current
+	 * @return array|null of content_status_id, content_status_names the current
 	 * user can use on this content.
 	 */
-	function getAvailableContentStatuses( $pUserMinimum=-100, $pUserMaximum=100 ) {
+	public function getAvailableContentStatuses( $pUserMinimum=-100, $pUserMaximum=100 ) {
 		global $gBitUser;
-		$ret = NULL;
-	 	// return NULL for all but admins
+		$ret = null;
+	 	// return null for all but admins
 		if( $gBitUser->hasPermission( 'p_liberty_edit_all_status' )) {
 			$ret = LibertyMime::getAvailableContentStatuses();
 		}
@@ -404,8 +411,7 @@ class BitBlog extends LibertyMime {
 function blogs_module_display(&$pParamHash){
 	global $gBitThemes, $gBitSmarty, $gBitSystem;
 	if( $gBitThemes->isModuleLoaded( 'bitpackage:blogs/center_list_blog_posts.tpl', 'c' ) && $gBitSystem->isFeatureActive( 'blog_ajax_more' ) && $gBitThemes->isJavascriptEnabled() ) {
-		$gBitSmarty->assign( 'ajax_more', TRUE );
+		$gBitSmarty->assign( 'ajax_more', true );
 		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js', 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ));
 	}
 }
-?>
