@@ -23,23 +23,28 @@
 /**
  * definitions
  */
+namespace Bitweaver\Liberty;
+use Bitweaver\Users\RoleUser;
+use Bitweaver\Blogs\BitBlogPost;
+use Bitweaver\KernelTools;
+
 global $gBitSystem, $gBitSmarty;
 //it seems this is loaded before the package is activated.
 //if( $gBitSystem->isPackageActive( 'blogs' ) ) { // Do not include this Plugin if the Package is not active
 define( 'PLUGIN_GUID_DATABLOG', 'datablog' );
 global $gLibertySystem;
-$pluginParams = array (
+$pluginParams = [
 	'tag' => 'BLOG',
-	'auto_activate' => FALSE,
-	'requires_pair' => FALSE,
+	'auto_activate' => false,
+	'requires_pair' => false,
 	'load_function' => 'data_blog',
 	'help_function' => 'data_blog_help',
 	'title' => 'Blog',
 	'help_page' => 'DataPluginBlog',
-	'description' => tra( "This plugin will display several posts from a blog." ),
+	'description' => KernelTools::tra( "This plugin will display several posts from a blog." ),
 	'syntax' => "{BLOG id= user= max= format= }",
 	'plugin_type' => DATA_PLUGIN
-);
+];
 $gLibertySystem->registerPlugin( PLUGIN_GUID_DATABLOG, $pluginParams );
 $gLibertySystem->registerDataTag( $pluginParams['tag'], PLUGIN_GUID_DATABLOG );
 
@@ -48,33 +53,33 @@ function data_blog_help() {
 	$help =
 		'<table class="data help">'
 			.'<tr>'
-				.'<th>' . tra( "Key" ) . '</th>'
-				.'<th>' . tra( "Type" ) . '</th>'
-				.'<th>' . tra( "Comments" ) . '</th>'
+				.'<th>' . KernelTools::tra( "Key" ) . '</th>'
+				.'<th>' . KernelTools::tra( "Type" ) . '</th>'
+				.'<th>' . KernelTools::tra( "Comments" ) . '</th>'
 			.'</tr>'
 			.'<tr class="even">'
 				.'<td>id</td>'
-				.'<td>' . tra( "numeric") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "Filters for the specified Blog by id") . '</td>'
+				.'<td>' . KernelTools::tra( "numeric") . '<br />' . KernelTools::tra("(optional)") . '</td>'
+				.'<td>' . KernelTools::tra( "Filters for the specified Blog by id") . '</td>'
 			.'</tr>'
 			.'<tr class="odd">'
 				.'<td>user</td>'
-				.'<td>' . tra( "string") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "The login name of the user who's posts are to be displayed. (Default = 3)") . '</td>'
+				.'<td>' . KernelTools::tra( "string") . '<br />' . KernelTools::tra("(optional)") . '</td>'
+				.'<td>' . KernelTools::tra( "The login name of the user who's posts are to be displayed. (Default = 3)") . '</td>'
 			.'</tr>'
 			.'<tr class="even">'
 				.'<td>max</td>'
-				.'<td>' . tra( "numeric") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "The number of posts to be displayed. (Default = 3)") . '</td>'
+				.'<td>' . KernelTools::tra( "numeric") . '<br />' . KernelTools::tra("(optional)") . '</td>'
+				.'<td>' . KernelTools::tra( "The number of posts to be displayed. (Default = 3)") . '</td>'
 			.'</tr>'
 			.'<tr class="odd">'
 				.'<td>format</td>'
-				.'<td>' . tra( "string") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "Specify format for posts display - options: full, list (default)") . '</td>'
+				.'<td>' . KernelTools::tra( "string") . '<br />' . KernelTools::tra("(optional)") . '</td>'
+				.'<td>' . KernelTools::tra( "Specify format for posts display - options: full, list (default)") . '</td>'
 			.'</tr>'
 		.'</table>'
-		. tra("Example: ") . "{BLOG id=2 max=5 format='full'}<br />"
-		. tra("Example: ") . "{BLOG id=5 format='list'}";
+		. KernelTools::tra("Example: ") . "{BLOG id=2 max=5 format='full'}<br />"
+		. KernelTools::tra("Example: ") . "{BLOG id=5 format='list'}";
 	return $help;
 }
 
@@ -87,8 +92,8 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 	// The next 2 lines allow access to the $pluginParams given above and may be removed when no longer needed
 		$pluginParams = $gLibertySystem->mPlugins[PLUGIN_GUID_DATABLOG];
 		
-		require_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php');
-		require_once( LIBERTY_PKG_INCLUDE_PATH.'lookup_content_inc.php' );
+		require_once BLOGS_PKG_CLASS_PATH.'BitBlog.php';
+		require_once LIBERTY_PKG_INCLUDE_PATH.'lookup_content_inc.php';
 		
 		$module_params = $params;
 		
@@ -98,22 +103,20 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		
 		$blogPost = new BitBlogPost();
 		
-		$sortOptions = array(
-							 "publish_date_desc",
-							 "publish_date_asc",
-							 "last_modified_asc",
-							 "last_modified_desc",
-							 "created_asc",
-							 "created_desc",
-							 "random",
-							 );
-		if( !empty( $module_params['sort_mode'] ) && in_array( $module_params['sort_mode'], $sortOptions ) ) {
-			$sort_mode = $module_params['sort_mode'];
-		} else {
-			$sort_mode = 'publish_date_desc';
-		}
+		$sortOptions = [
+						 "publish_date_desc",
+						 "publish_date_asc",
+						 "last_modified_asc",
+						 "last_modified_desc",
+						 "created_asc",
+						 "created_desc",
+						 "random",
+						];
+		$sort_mode = !empty( $module_params['sort_mode'] ) && in_array( $module_params['sort_mode'], $sortOptions )
+		 ? $module_params['sort_mode']
+		 : 'publish_date_desc';
 		
-		$getHash = Array();
+		$getHash = [];
 		
 		if ( isset($module_params['user']) ){ $getHash['user'] = $module_params['user']; }
 		if ( isset($module_params['id']) ){ $getHash['blog_id'] = $module_params['id'];}
@@ -121,15 +124,15 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		if ( isset($module_params['role_id']) ){ $getHash['role_id'] = $module_params['role_id'];}
 		
 		// handle draft posts
-		$getHash['enforce_status'] = TRUE;
+		$getHash['enforce_status'] = true;
 		// @TODO enable lists that include draft posts
 		// the current tpl configuration doesnt allow us to support draft lists right now
 		// there is an object reference problem in liberty::service_content_body_inc.tpl
 		// if the object reference problem in the above mentions tpl is patched then use this if to enable drafts
 		// if ( !empty( $module_params['status'] ) && $module_params['status'] = "draft" && isset( $gBitUser->mUserId ) ){
-		if ( FALSE ){
+		if ( false ) {
 			// if we are getting drafts then get future posts too 
-			$getHash['show_future'] = TRUE;
+			$getHash['show_future'] = true;
 			$getHash['min_status_id'] = -6;
 			$getHash['max_status_id'] = -4;
 			$getHash['min_owner_status_id'] = -6;
@@ -140,11 +143,11 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		}
 
 		$getHash['sort_mode']   = $sort_mode;
-		$getHash['parse_data'] = TRUE;
+		$getHash['parse_data'] = true;
 		$getHash['max_records'] = empty($module_params['max']) ? 1 : $module_params['max'];
-		$getHash['load_num_comments'] = TRUE;
-		$getHash['page'] = (!empty($module_params['page']) ? $module_params['page'] : 1);
-		$getHash['offset'] = (!empty($module_params['offset']) ? $module_params['offset'] : 0);
+		$getHash['load_num_comments'] = true;
+		$getHash['page'] = !empty($module_params['page']) ? $module_params['page'] : 1;
+		$getHash['offset'] = !empty($module_params['offset']) ? $module_params['offset'] : 0;
 		$blogPosts = $blogPost->getList( $getHash );
 		
 		$display_format = empty($module_params['format']) ? 'simple_title_list' : $module_params['format'];
@@ -154,7 +157,7 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 				$display_result = '<div class="blogs">';				
 				if ( $gBitSystem->isPackageActive( 'rss' ) ){
 					if ( isset($module_params['user']) ){
-						$rssUser = new BitUser();
+						$rssUser = new RoleUser();
 						$rssUser->load(false, $module_params['user']);
 						$rssUserId = $rssUser->getField('user_id');
 					}
@@ -167,11 +170,11 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 						.( (isset($rssUserId) && isset($module_params['role_id']))? "&": "")
 						.( isset($module_params['role_id']) ? 'role_id='.$module_params['role_id'] : "" );
 					// something like this would be better, calling smarty directly so translation can also be called -wjames5
-					// $rssIcon = smarty_function_biticon( array('ipackage'=>"rss", 'iname'="rss-16x16", 'iexplain'=>"RSS feed"), &$gBitSmarty );
+					// $rssIcon = Smarty\smarty_function_biticon( array('ipackage'=>"rss", 'iname'="rss-16x16", 'iexplain'=>"RSS feed"), &$gBitSmarty );
 					$display_result .= '<div class="floaticon"><a title="RSS feed" href="'.$rssPath.'"><img src="'.BIT_ROOT_URL.'rss/icons/rss-16x16.png" alt="RSS feed" title="RSS feed" class="icon" /></a></div>';
 				}
 
-				$gBitSmarty->assign( 'showDescriptionsOnly', TRUE );
+				$gBitSmarty->assign( 'showDescriptionsOnly', true );
 				
 				foreach( $blogPosts['data'] as $aPost ) {
 					$gBitSmarty->assign('aPost', $aPost);
@@ -179,7 +182,7 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 				}
 
 				$display_result .= '</div>';
-				$display_result = eregi_replace( "\n", "", $display_result );
+				$display_result = mb_eregi_replace( "\n", "", $display_result );
 				break;
 			case 'list':
 			default:
@@ -193,9 +196,7 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		}
 	}
 	else {
-		$display_result = '<div class=error>'.tra('Blogs Package Deactivated.'). '</div>';
+		$display_result = '<div class=error>'.KernelTools::tra('Blogs Package Deactivated.'). '</div>';
 	}
 	return $display_result;
 }
-//}
-?>
