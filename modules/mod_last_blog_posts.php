@@ -13,7 +13,7 @@ include_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php' );
 // moduleParams contains lots of goodies: extract for easier handling
 extract( $moduleParams );
 
-$date_start = NULL;
+$date_start = null;
 if( !empty($module_params['date_start_offset']) ){
 	//offset is passed as number of hours
 	$date_start = time() - ( $module_params['date_start_offset'] * 3600 );
@@ -22,11 +22,11 @@ if( !empty($module_params['date_start_offset']) ){
 $defaultsHash = array(
 	'sort_mode'   => ( !empty( $module_params['sort_mode'] ) ? $module_params['sort_mode'] : 'publish_date_desc' ),
 	'max_records' => $module_rows,
-	'parse_data'  => TRUE,
-	'user'        => ( !empty( $module_params['user'] ) ? $module_params['user'] : NULL ),
-	'blog_id'     => ( @BitBase::verifyId( $module_params['blog_id'] ) ? $module_params['blog_id'] : NULL ),
-	'role_id'     => ( @BitBase::verifyId( $module_params['role_id'] ) ? $module_params['role_id'] : NULL ),
-	'group_id'    => ( @BitBase::verifyId( $module_params['group_id'] ) ? $module_params['group_id'] : NULL ),
+	'parse_data'  => true,
+	'user'        => ( !empty( $module_params['user'] ) ? $module_params['user'] : null ),
+	'blog_id'     => ( BitBase::verifyId( $module_params['blog_id'] ) ? $module_params['blog_id'] : null ),
+	'role_id'     => ( BitBase::verifyId( $module_params['role_id'] ) ? $module_params['role_id'] : null ),
+	'group_id'    => ( BitBase::verifyId( $module_params['group_id'] ) ? $module_params['group_id'] : null ),
 	'date_start'  =>  $date_start,
 	'offset'	  => ( !empty( $module_params['offset'] ) ? $module_params['offset'] : 0 ),
 );
@@ -42,11 +42,11 @@ if( !$gBitUser->hasPermission( 'p_blogs_admin' )) {
 }
 
 // we dont want admin drafts included in regular lists if we are enforcing content status
-$listHash['enforce_status'] = TRUE;
+$listHash['enforce_status'] = true;
 
 if ( !empty( $module_params['status'] ) && $module_params['status'] = "draft" && isset( $gBitUser->mUserId ) ){
 	// if we are getting drafts then get future posts too
-    $listHash['show_future'] = TRUE;
+    $listHash['show_future'] = true;
 	$listHash['min_status_id'] = -6;
 	$listHash['max_status_id'] = -4;
 	$listHash['min_owner_status_id'] = -6;
@@ -61,6 +61,6 @@ $blogPost = new BitBlogPost();
 $blogPosts = $blogPost->getList( $listHash );
 $descriptionLength = ( !empty( $module_params['max_preview_length'] ) ? $module_params['max_preview_length'] : 500 );
 
-$_template->tpl_vars['blogPostsFormat'] = new Smarty_variable( (empty($module_params['format']) ) );
-$_template->tpl_vars['descriptionLength'] = new Smarty_variable( $descriptionLength );
-$_template->tpl_vars['modLastBlogPosts'] = new Smarty_variable( $blogPosts );
+$gBitSmarty->assign( 'blogPostsFormat', (empty($module_params['format']) ) );
+$gBitSmarty->assign( 'descriptionLength', $descriptionLength );
+$gBitSmarty->assign( 'modLastBlogPosts', $blogPosts );

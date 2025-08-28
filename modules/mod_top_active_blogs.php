@@ -8,18 +8,17 @@
 /**
  * required setup
  */
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
-
+use Bitweaver\Blogs\BitBlog;
+use Bitweaver\Users\RoleUser;
 global $gQueryUserId, $gBitThemes, $module_rows, $module_params;
 
 $listHash['max_records'] = $module_rows;
 $listHash['sort_mode'] = 'activity_desc';
-BitUser::userCollection( $module_params, $listHash );
-$listHash['is_active'] = TRUE;
+RoleUser::userCollection( $module_params, $listHash );
+$listHash['is_active'] = true;
 
 $blog = new BitBlog();
 $ranking = $blog->getList( $listHash );
 if( !empty( $ranking ) ) {
-	$_template->tpl_vars['modTopActiveBlogs'] = new Smarty_variable( $ranking );
+	$gBitSmarty->assign( 'modTopActiveBlogs', $ranking );
 }
-?>
