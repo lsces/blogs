@@ -7,7 +7,9 @@
 /**
  * required setup
  */
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
+use Bitweaver\Blogs\BitBlog;
+use Bitweaver\KernelTools;
+use \Bitweaver\Liberty\LibertyContent;
 
 if (!isset($gContent->mPostId)) {
 	$parts = parse_url($_SERVER['REQUEST_URI']);
@@ -29,18 +31,18 @@ if (!isset($gContent->mPostId)) {
 		$blog_name = isset($_REQUEST['blog_name']) ? $_REQUEST['blog_name'] : '';
 
 		if ($gContent->addTrackbackFrom( $_REQUEST['url'], $title, $excerpt, $blog_name ) ) {
-			print ('<?xml version="1.0" encoding="iso-8859-1"?>');
+			print '<?xml version="1.0" encoding="iso-8859-1"?>';
 
-			print ('<response>');
-			print ('<error>0</error>');
-			print ('</response>');
+			print '<response>';
+			print '<error>0</error>';
+			print '</response>';
 		} else {
-			print ('<?xml version="1.0" encoding="iso-8859-1"?>');
+			print '<?xml version="1.0" encoding="iso-8859-1"?>';
 
-			print ('<response>');
-			print ('<error>1</error>');
-			print ('<message>Error trying to add ping for post</message>');
-			print ('</response>');
+			print '<response>';
+			print '<error>1</error>';
+			print '<message>Error trying to add ping for post</message>';
+			print '</response>';
 		}
 
 		die;
@@ -49,15 +51,17 @@ if (!isset($gContent->mPostId)) {
 
 $gBitSystem->verifyPackage( 'blogs' );
 
-$gBitSystem->verifyPermission( 'p_blogs_view' );
+// $gBitSystem->verifyPermission( 'p_blogs_view' );
 
 // Check permissions to access this page
 if( !$gContent->isValid() ) {
 	$gBitSystem->setHttpStatus( 404 );
-	$gBitSystem->fatalError( tra( 'Post cannot be found' ));
+	$gBitSystem->fatalError( KernelTools::tra( 'Post cannot be found' ));
+} else {
+	$gBitSystem->setCanonicalLink( $gContent->getDisplayUrl() );
 }
 
-$displayHash = array( 'perm_name' => 'p_blogs_view' );
+$displayHash = [ 'perm_name' => 'p_blogs_view' ];
 $gContent->invokeServices( 'content_display_function', $displayHash );
 $gBitSmarty->assign('post_id', $gContent->mPostId);
 
@@ -67,9 +71,9 @@ if ( empty( $_REQUEST['format'] ) || $_REQUEST['format'] == "full" || $_REQUEST[
 	if ($gBitSystem->isFeatureActive( 'blog_posts_comments' ) ) {
 		$comments_return_url = $_SERVER['SCRIPT_NAME']."?post_id=".$gContent->mPostId;
 		$commentsParentId = $gContent->mContentId;
-		include_once ( LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php' );
+		include_once LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php';
 	}
-	$extendedTitle = isset($gContent->mInfo['blogtitle']) ? ' - '.$gContent->mInfo['blogtitle'] : NULL;
+	$extendedTitle = $gContent->mInfo['blogtitle'] ?? '';
 	$gBitSystem->setBrowserTitle($gContent->mInfo['title'].$extendedTitle);
 } else {
 	// if the format requested is not the full post or the readmore data we default to just the first half of the post
@@ -82,8 +86,7 @@ $gBitSmarty->assign('post_info', $gContent->mInfo );
 
 // Display the template
 if ( isset( $_REQUEST['output'] ) && $_REQUEST['output']="ajax"){	
-	$gBitSystem->display( 'bitpackage:blogs/view_blog_post_xml.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'display' ));
+	$gBitSystem->display( 'bitpackage:blogs/view_blog_post_xml.tpl', null, [ 'format' => 'center_only', 'display_mode' => 'display' ] );
 }else{
-	$gBitSystem->display( 'bitpackage:blogs/view_blog_post.tpl' , NULL, array( 'display_mode' => 'display' ));
+	$gBitSystem->display( 'bitpackage:blogs/view_blog_post.tpl' , null, [ 'display_mode' => 'display' ] );
 }
-?>
