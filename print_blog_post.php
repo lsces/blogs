@@ -1,4 +1,6 @@
 <?php
+
+use Bitweaver\KernelTools;
 /**
  * @version $Header$
 
@@ -12,28 +14,24 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php' );
+include_once BLOGS_PKG_CLASS_PATH.'BitBlogPost.php';
 
 $gBitSystem->verifyPackage( 'blogs' );
 
 if (!isset($_REQUEST["post_id"])) {
-	$gBitSystem->fatalError( tra( 'No post indicated' ));
+	$gBitSystem->fatalError( KernelTools::tra( 'No post indicated' ));
 }
 
-include_once( BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php' );
+include_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
 
 $gBitSmarty->assign('post_info', $gContent->mInfo );
 
 //Build absolute URI for this
 $parts = parse_url($_SERVER['REQUEST_URI']);
-/*OLD with blog_id - might later want to reincorporate blog_id but will have to start in the view_blog_post.tpl -wjames5
-$uri = httpPrefix(). $parts['path'] . '?blog_id=' . $gContent->mInfo['blog_id'] . '&post_id=' . $gContent->mInfo['post_id'];
-$uri2 = httpPrefix(). $parts['path'] . '/' . $gContent->mInfo['blog_id'] . '/' . $gContent->mInfo['post_id'];
-*/
-$uri = httpPrefix(). $parts['path'] . '?post_id=' . $gContent->mInfo['post_id'];
-$uri2 = httpPrefix(). $parts['path'] . '/' . $gContent->mInfo['post_id'];
+$uri = KernelTools::httpPrefix(). $parts['path'] . '?post_id=' . $gContent->mInfo['post_id'];
+$uri2 = KernelTools::httpPrefix(). $parts['path'] . '/' . $gContent->mInfo['post_id'];
 $gBitSmarty->assign('uri', $uri);
 $gBitSmarty->assign('uri2', $uri2);
 
@@ -60,12 +58,10 @@ $gBitSystem->verifyPermission( 'p_blogs_view' );
 if ($gBitSystem->isFeatureActive( 'blog_posts_comments' )) {
 	$comments_return_url = $_SERVER['SCRIPT_NAME']."?post_id=".$gContent->getField( 'post_id' );
 	$commentsParentId = $gContent->mContentId;
-	include_once ( LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php' );
+	include_once LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php';
 }
 
 
 $gBitSystem->setBrowserTitle( $gContent->mInfo['title'] );
 // Display the template
 $gBitSmarty->display("bitpackage:blogs/print_blog_post.tpl");
-
-?>

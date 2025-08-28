@@ -13,53 +13,52 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
-
-include_once( LIBERTY_PKG_PATH . 'LibertyContent.php' );
-require_once( BLOGS_PKG_PATH . 'BitBlog.php' );
-require_once( BLOGS_PKG_PATH . 'BitBlogPost.php' );
+namespace Bitweaver\Blogs;
+require_once '../kernel/includes/setup_inc.php';
+use Bitweaver\KernelTools;
+use BitWeaver\Liberty\LibertyContent;
 
 $gBitSystem->verifyPackage( 'blogs' );
 $gBitSystem->verifyFeature( 'blog_rankings' );
 $gBitSystem->verifyPermission( 'p_blogs_view' );
 
-$rankingOptions = array(
-	array(
-		'output' => tra( 'Most Often Viewed' ),
+$rankingOptions = [
+	[
+		'output' => KernelTools::tra( 'Most Often Viewed' ),
 		'value' => 'hits_desc'
-	),
-	array(
-		'output' => tra( 'Most Recently Modified' ),
+	],
+	[
+		'output' => KernelTools::tra( 'Most Recently Modified' ),
 		'value' => 'last_modified_desc'
-	),
-	array(
-		'output' => tra( 'Most Active Authors' ),
+	],
+	[
+		'output' => KernelTools::tra( 'Most Active Authors' ),
 		'value' => 'top_authors'
-	),
-);
+	],
+];
 $gBitSmarty->assign( 'rankingOptions', $rankingOptions );
 
 if( !empty( $_REQUEST['sort_mode'] ) ) {
 	switch( $_REQUEST['sort_mode'] ) {
 		case 'last_modified_desc':
 			$gBitSmarty->assign( 'attribute', 'last_modified' );
-			$_REQUEST['attribute'] = tra( 'Date of last modification' );
+			$_REQUEST['attribute'] = KernelTools::tra( 'Date of last modification' );
 			break;
 		case 'top_authors':
 			$gBitSmarty->assign( 'attribute', 'ag_hits' );
-			$_REQUEST['attribute'] = tra( 'Hits to items by this Author' );
+			$_REQUEST['attribute'] = KernelTools::tra( 'Hits to items by this Author' );
 			break;
 		default:
 			$gBitSmarty->assign( 'attribute', 'hits' );
-			$_REQUEST['attribute'] = tra( 'Hits' );
+			$_REQUEST['attribute'] = KernelTools::tra( 'Hits' );
 			break;
 	}
 } else {
 	$gBitSmarty->assign( 'attribute', 'hits' );
-	$_REQUEST['attribute'] = tra( 'Hits' );
+	$_REQUEST['attribute'] = KernelTools::tra( 'Hits' );
 }
 
-$_REQUEST['title']             = tra( 'Blog Post Rankings' );
+$_REQUEST['title']             = KernelTools::tra( 'Blog Post Rankings' );
 $_REQUEST['content_type_guid'] = BITBLOGPOST_CONTENT_TYPE_GUID;
 $_REQUEST['max_records']       = !empty( $_REQUEST['max_records'] ) ? $_REQUEST['max_records'] : 10;
 
@@ -69,7 +68,7 @@ if( empty( $gContent ) ) {
 $rankList = $gContent->getContentRanking( $_REQUEST );
 $gBitSmarty->assign( 'rankList', $rankList );
 
-$gBitSystem->display( 'bitpackage:liberty/rankings.tpl', tra( "Blog Post Rankings" ) , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:liberty/rankings.tpl', KernelTools::tra( "Blog Post Rankings" ) , array( 'display_mode' => 'display' ));
 
 
 
@@ -77,7 +76,7 @@ $gBitSystem->display( 'bitpackage:liberty/rankings.tpl', tra( "Blog Post Ranking
 /* ---- below is what blog rankings was - might want to canabalize some of it eventually ---- */
 /*
 
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
 
 $gBitSystem->verifyPackage( 'blogs' );
@@ -91,17 +90,17 @@ require_once( BLOGS_PKG_PATH . 'BitBlogPost.php' );
 
 $allrankings = array(
 	array(
-	'name' => tra('Most visited blogs'),
+	'name' => KernelTools::tra('Most visited blogs'),
 	'value' => 'blog_ranking_top_blogs'
 ),
 	array(
-	'name' => tra('Last posts'),
+	'name' => KernelTools::tra('Last posts'),
 	'value' => 'blog_ranking_last_posts'
 ),
 	/**
 	 * @todo reenable once we have activity implemented
 	array(
-	'name' => tra('Most active blogs'),
+	'name' => KernelTools::tra('Most active blogs'),
 	'value' => 'blog_ranking_top_active_blogs'
 )
 	**/
@@ -125,21 +124,21 @@ if (!isset($_REQUEST["limit"])) {
 	$limit = $_REQUEST["limit"];
 }
 
-$gBitSmarty->assignByRef('limit', $limit);
+$gBitSmarty->assign('limit', $limit);
 
 // Rankings:
 // Top Pages
 // Last pages
 // Top Authors -- Would be nice.
-$rankings = array();
+$rankings = [];
 
 $rankings = $which($limit);
 
-$gBitSmarty->assignByRef('rankings', $rankings);
+$gBitSmarty->assign('rankings', $rankings);
 $gBitSmarty->assign('rpage', 'rankings.php');
 
 // Display the template
-$gBitSystem->display( 'bitpackage:blogs/ranking.tpl', tra($rankings['title']), array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:blogs/ranking.tpl', KernelTools::tra($rankings['title']), array( 'display_mode' => 'display' ));
 
 // =============================== some ranking functions - as soon as blogs are part of LibertyContent, we can use LibertyContent::getContentRanking()
 function blog_ranking_top_blogs($limit) {
@@ -157,7 +156,7 @@ function blog_ranking_top_blogs($limit) {
 			$list['data'][$key]['post_array'][] = $ret;
 		}
 	}
-	$list['title'] = tra("Most Visited Blogs");
+	$list['title'] = KernelTools::tra("Most Visited Blogs");
 	return $list;
 }
 
@@ -179,7 +178,7 @@ function blog_ranking_top_active_blogs($limit) {
 			$list['data'][$key]['post_array'][] = $ret;
 		}
 	}
-	$list['title'] = tra("Most Visited Blogs");
+	$list['title'] = KernelTools::tra("Most Visited Blogs");
 	return $list;
 }
 
@@ -199,7 +198,7 @@ function blog_ranking_last_posts($limit) {
 	  $blog_hash['sort_mode'] = 'lch.hits_desc';
 	  $blog_hash['find'] = $blog_ids;
 	  $blogs = $b->getList($blog_hash);
-	  $list['data'] = array();
+	  $list['data'] = [];
 	  // Reorganize blogs by id
 	  foreach($blogs['data'] as $key => $blog) {
 	    $list['data'][$blog['blog_id']] = $blog;
@@ -214,4 +213,3 @@ function blog_ranking_last_posts($limit) {
 	return $list;
 }
 */
-?>

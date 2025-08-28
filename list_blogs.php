@@ -12,19 +12,19 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
-require_once( BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php');
-
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
+require_once '../kernel/includes/setup_inc.php';
+use Bitweaver\KernelTools;
 
 $gBitSystem->verifyPackage( 'blogs' );
 
+require_once BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php';
+
 $gBitSystem->verifyPermission( 'p_blogs_view' );
 
-$gBitSystem->setBrowserTitle(tra("View All Blogs"));
+$gBitSystem->setBrowserTitle(KernelTools::tra("View All Blogs"));
 
 if( $gContent->isValid() && isset($_REQUEST["remove"])) {
-	$gBitSystem->setBrowserTitle(tra("Delete Blog"));
+	$gBitSystem->setBrowserTitle(KernelTools::tra("Delete Blog"));
 
 	// Check if has edit perm of this blog
 	$gContent->verifyUpdatePermission();
@@ -35,8 +35,8 @@ if( $gContent->isValid() && isset($_REQUEST["remove"])) {
 		$formHash['blog_id'] = $gContent->mBlogId;
 		$gBitSystem->confirmDialog( $formHash, 
 			array(
-				'warning' => tra('Are you sure you want to delete this blog?') . ' ' . $gContent->getTitle(), 
-				'error' => tra('This cannot be undone!'),
+				'warning' => KernelTools::tra('Are you sure you want to delete this blog?') . ' ' . $gContent->getTitle(), 
+				'error' => KernelTools::tra('This cannot be undone!'),
 			)
 		);
 	} else {
@@ -47,12 +47,10 @@ if( $gContent->isValid() && isset($_REQUEST["remove"])) {
 // Get a list of last changes to the Wiki database
 $blogsList = $gContent->getList( $_REQUEST );
 $gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
-$gBitSmarty->assignByRef( 'blogsList', $blogsList );
+$gBitSmarty->assign( 'blogsList', $blogsList );
 
 if( defined(ROLE_MODEL) ) {
-	$gBitSmarty->assign( 'role_model', TRUE );
+	$gBitSmarty->assign( 'role_model', true );
 }
 // Display the template
-$gBitSystem->display( 'bitpackage:blogs/list_blogs.tpl', NULL, array( 'display_mode' => 'list' ));
-
-?>
+$gBitSystem->display( 'bitpackage:blogs/list_blogs.tpl', null, array( 'display_mode' => 'list' ));

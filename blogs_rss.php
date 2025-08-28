@@ -9,13 +9,14 @@
  * Initialization
  */
 require_once( "../kernel/includes/setup_inc.php" );
+use Bitweaver\Blogs\BitBlogPost;
+use Bitweaver\Users\RolePermUser;
 
 $gBitSystem->verifyPackage( 'rss' );
 $gBitSystem->verifyPackage( 'blogs' );
 $gBitSystem->verifyFeature( 'blogs_rss' );
 
-require_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php' );
-require_once( RSS_PKG_INCLUDE_PATH.'rss_inc.php' );
+require_once RSS_PKG_INCLUDE_PATH.'rss_inc.php';
 
 // default feed info
 $rss->title = $gBitSystem->getConfig( 'blogs_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'Blog Posts' ) );
@@ -23,7 +24,7 @@ $rss->description = $gBitSystem->getConfig( 'blogs_rss_description', $gBitSystem
 
 // check permission to view wiki pages
 if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
-	require_once( RSS_PKG_PATH."rss_error.php" );
+	require_once RSS_PKG_PATH."rss_error.php";
 } else {
 	// check if we want to use the cache file
 	$cacheFile = TEMP_PKG_PATH.RSS_PKG_NAME.'/'.BLOGS_PKG_NAME.( !empty( $_REQUEST['user_id'] ) ? "_".$_REQUEST['user_id'] : "" ).( !empty( $_REQUEST['group_id'] ) ? "_".$_REQUEST['group_id'] : "" ).( !empty( $_REQUEST['role_id'] ) ? "_".$_REQUEST['role_id'] : "" ).( !empty( $_REQUEST['blog_id'] ) ? "_".$_REQUEST['blog_id'] : "" ).'_'.$cacheFileTail;
@@ -32,25 +33,21 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	$blogPost = new BitBlogPost();
 	$listHash['sort_mode'] = 'last_modified_desc';
 	$listHash['max_records'] = $gBitSystem->getConfig( 'blogs_rss_max_records', 10 );
-	$listHash['parse_data'] = TRUE;
-	$listHash['full_data'] = TRUE;
+	$listHash['parse_data'] = true;
+	$listHash['full_data'] = true;
 	if( !empty( $_REQUEST['user_id'] ) ) {
-		if ( $gBitSystem->getConfig( 'user_class', 'BitPermUser' ) == 'RolePermUser' ) {
-			require_once( USERS_PKG_PATH.'includes/RoleUser.php' );
-		} else {
-			require_once( USERS_PKG_PATH.'includes/BitUser.php' );
+		$blogUser = $gBitSystem->getConfig( 'user_class', 'BitPermUser' ) == 'RolePermUser' ? new RoleUser() : new BitUser();
 		}
-		$blogUser = new BitUser();
+		
 		$userData = $blogUser->getUserInfo( array('user_id' => $_REQUEST['user_id']) );
 		// dont try and fool me
-		if (!empty($userData)){
+		if (!empty($userData)) {
 			$userName = $userData['real_name']?$userData['real_name']:$userData['login'];
 			$rss->title = $userName." at ".$gBitSystem->getConfig( 'site_title' );
 			$listHash['user_id'] = $_REQUEST['user_id'];
-		}
 	} else if( !empty( $_REQUEST['group_id'] ) ) {
-		require_once( USERS_PKG_PATH . 'BitPermUser.php' );
-		$permUser = new BitPermUser();
+		require_once USERS_PKG_PATH . 'BitPermUser.php';
+		$permUser = new RolePermUser();
 		$groupData = $permUser->getGroupInfo( $_REQUEST['group_id'] );
 		// dont try and fool me
 		if (!empty($groupData)){
@@ -59,8 +56,7 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 			$listHash['group_id'] = $_REQUEST['group_id'];
 		}
 	} else if( !empty( $_REQUEST['role_id'] ) ) {
-		require_once( USERS_PKG_PATH . 'RolePermUser.php' );
-		$permUser = new BitPermUser();
+		$permUser = new RolePermUser();
 		$roleData = $permUser->getRoleInfo( $_REQUEST['role_id'] );
 		// dont try and fool me
 		if (!empty($roleData)){
@@ -91,15 +87,15 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	foreach( $feeds['data'] as $feed ) {
 		$item = new FeedItem();
 		$item->title = BitBlogPost::getTitleFromHash( $feed );
-		$item->link = BIT_BASE_URI.BitBlogPost::getDisplayUrlFromHash( NULL, $feed );
+		$item->link = BIT_BASE_URI.BitBlogPost::getDisplayUrlFromHash( null, $feed );
 		$item->description = $feed['parsed'];
 
 		$item->date = ( int )$feed['last_modified'];
 		$item->source = 'http://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
-		$item->author = $gBitUser->getDisplayName( FALSE, $feed );
+		$item->author = $gBitUser->getDisplayName( false, $feed );
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 50000 );
-		$item->descriptionHtmlSyndicated = TRUE;
+		$item->descriptionHtmlSyndicated = true;
 
 		// pass the item on to the rss feed creator
 		$rss->addItem( $item );

@@ -13,13 +13,12 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
+use Bitweaver\Blogs\BitBlogPost;
 
 $gBitSystem->verifyPackage( 'blogs' );
 
-require_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php' );
-
-include_once( BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php' );
+include_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
 
 if( !$gContent->isValid() ) {
 	$gBitSystem->setHttpStatus( 404 );
@@ -29,22 +28,22 @@ if( !$gContent->isValid() ) {
 $gContent->verifyViewPermission();
 
 $now = $gBitSystem->getUTCTime();
-$view = FALSE;
+$view = false;
 
 if ( $gContent->hasAdminPermission()  || ( $gContent->hasUserPermission( 'p_blog_posts_read_future' ) && $gContent->hasUserPermission( 'p_blog_posts_read_expired' ) ) ){
-	$view = TRUE;
+	$view = true;
 }elseif ( $gContent->mInfo['publish_date'] == $gContent->mInfo['expire_date'] ) {
-	$view = TRUE;
+	$view = true;
 }elseif ( $gContent->mInfo['publish_date'] > $now && $gContent->hasUserPermission( 'p_blog_posts_read_future' ) ){
-	$view = TRUE;
+	$view = true;
 }elseif ( $gContent->mInfo['expire_date'] < $now && $gContent->hasUserPermission( 'p_blog_posts_read_expired' ) ){
-	$view = TRUE;
+	$view = true;
 }elseif ( ( $gContent->mInfo['publish_date'] <= $now ) && ( $gContent->mInfo['expire_date'] > $now || $gContent->mInfo['expire_date'] <= $gContent->mInfo['publish_date'] ) ){
-	$view = TRUE;
+	$view = true;
 }
 
-if ($view == TRUE){
-	include_once( BLOGS_PKG_INCLUDE_PATH.'display_bitblogpost_inc.php' );
+if ($view == true){
+	include_once BLOGS_PKG_INCLUDE_PATH.'display_bitblogpost_inc.php';
 }else{
 	$gBitSystem->setHttpStatus( 404 );
 	$gBitSystem->fatalError( "The blog post you requested could not be found." );
@@ -53,4 +52,3 @@ if ($view == TRUE){
 if( $gContent->isValid() ) {
 	$gContent->addHit();
 }
-?>

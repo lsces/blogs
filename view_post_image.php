@@ -13,17 +13,16 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
+include_once BLOGS_PKG_CLASS_PATH.'BitBlog.php';
 
 if (!isset($_REQUEST["image_id"])) {
 	$gBitSmarty->assign('msg', tra("No image id given"));
-	$gBitSystem->display( 'error.tpl' , NULL, array( 'display_mode' => 'display' ));
+	$gBitSystem->display( 'error.tpl' , null, array( 'display_mode' => 'display' ));
 	die;
 }
 
-$imageInfo = $gBlog->getStorageFileInfo($_REQUEST["image_id"]);
+$imageInfo = $gBlog->getStoreFileInfo($_REQUEST["image_id"]);
 $gBitSmarty->assign( 'imageInfo' , $imageInfo );
-$gBitSystem->display( 'bitpackage:blogs/view_post_image.tpl' , NULL, array( 'display_mode' => 'display' ));
-?>
+$gBitSystem->display( 'bitpackage:blogs/view_post_image.tpl' , null, array( 'display_mode' => 'display' ));

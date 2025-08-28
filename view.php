@@ -13,7 +13,6 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
-include_once( BLOGS_PKG_INCLUDE_PATH.'display_bitblog_inc.php' );
-?>
+include_once BLOGS_PKG_INCLUDE_PATH.'display_bitblog_inc.php';

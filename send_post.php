@@ -11,14 +11,14 @@
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
 
 // Make sure all defines get created as fully qualified URI's
-$_REQUEST['uri_mode'] = TRUE;
+$_REQUEST['uri_mode'] = true;
 
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlogPost.php' );
+include_once BLOGS_PKG_CLASS_PATH.'BitBlogPost.php';
 
 $gBitSystem->verifyPermission( 'p_blogs_send_post' );
 
@@ -26,7 +26,7 @@ if (!isset($_REQUEST["post_id"])) {
 	$gBitSystem->fatalError( tra( 'No post indicated' ));
 }
 
-include_once( BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php' );
+include_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
 // make sure this user can see the post to avoid emailing post to self to circumvent the perm
 $gContent->verifyViewPermission();
 
@@ -34,10 +34,6 @@ $gBitSmarty->assign('post_info', $gContent->mInfo );
 
 //Build absolute URI for this
 $parts = parse_url($_SERVER['REQUEST_URI']);
-/*OLD with blog_id - might later want to reincorporate blog_id but will have to start in the view_blog_post.tpl -wjames5
-$uri = httpPrefix(). $parts['path'] . '?blog_id=' . $gContent->mInfo['blog_id'] . '&post_id=' . $gContent->mInfo['post_id'];
-$uri2 = httpPrefix(). $parts['path'] . '/' . $gContent->mInfo['blog_id'] . '/' . $gContent->mInfo['post_id'];
-*/
 $uri = httpPrefix(). $parts['path'] . '?post_id=' . $gContent->mInfo['post_id'];
 $uri2 = httpPrefix(). $parts['path'] . '/' . $gContent->mInfo['post_id'];
 $gBitSmarty->assign('uri', $uri);
@@ -57,7 +53,7 @@ if ($gBitSystem->isFeatureActive( 'blog_posts_comments' )) {
 	$commentsParentId = $gContent->mContentId;
 	$comments_prefix_var = 'post:';
 	$comments_object_var = 'post_id';
-	include_once ( LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php' );
+	include_once LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php';
 }
 
 if (!isset($_REQUEST['addresses'])) {
@@ -89,6 +85,4 @@ if (isset($_REQUEST['send'])) {
 $gBitSystem->setBrowserTitle("Send Blog Post: ".$gContent->mInfo['title']);
 
 // Display the template
-$gBitSystem->display( 'bitpackage:blogs/send_blog_post.tpl', NULL, array( 'display_mode' => 'display' ));
-
-?>
+$gBitSystem->display( 'bitpackage:blogs/send_blog_post.tpl', null, array( 'display_mode' => 'display' ));

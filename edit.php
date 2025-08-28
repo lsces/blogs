@@ -12,12 +12,14 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
-include_once( BLOGS_PKG_CLASS_PATH.'BitBlog.php' );
+namespace Bitweaver\Blogs;
+require_once '../kernel/includes/setup_inc.php';
+use Bitweaver\KernelTools;
+use Bitweaver\Liberty\LibertyContent;
 
 $gBitSystem->verifyPackage( 'blogs' );
 
-require_once( BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php');
+require_once BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php';
 
 // Now check permissions to access this page
 if( $gContent->isValid() ) {
@@ -31,7 +33,7 @@ if (isset($_REQUEST['preview'])) {
 	$gBitSmarty->assign('title', $_REQUEST["title"]);
 	$gBitSmarty->assign('edit', $_REQUEST["edit"]);
 	$_REQUEST['data'] = $_REQUEST['edit']; // needed for parseDataHash
-	$gBitSmarty->assign('parsed', LibertyContent::parseDataHash( $_REQUEST );
+	$gBitSmarty->assign('parsed', LibertyContent::parseDataHash( $_REQUEST ));
 	$gBitSmarty->assign('user_name', $gBitUser->getDisplayName());
 	$gBitSmarty->assign('created', $gBitSystem->getUTCTime());
 	$gBitSmarty->assign('use_find', isset($_REQUEST["use_find"]) ? 'y' : 'n');
@@ -46,17 +48,15 @@ if (isset($_REQUEST['preview'])) {
 
 if (isset($_REQUEST['save_blog'])) {
 	if( $gContent->store( $_REQUEST ) ) {
-		bit_redirect( $gContent->getDisplayUrl() );
+		KernelTools::bit_redirect( $gContent->getDisplayUrl() );
 	} else {
-		$gBitSmarty->assignByRef( 'errors', $gContent->mErrors );
+		$gBitSmarty->assign( 'errors', $gContent->mErrors );
 	}
 }
 
-$gBitSystem->setBrowserTitle( tra( 'Edit Blog' ).' - '.$gContent->getTitle() );
+$gBitSystem->setBrowserTitle( KernelTools::tra( 'Edit Blog' ).' - '.$gContent->getTitle() );
 
 $gBitSmarty->assign( 'textarea_label', 'Blog Description' );
 
-$gBitSmarty->assignByRef('gContent', $gContent);
-$gBitSystem->display( 'bitpackage:blogs/edit_blog.tpl', NULL, array( 'display_mode' => 'edit' ));
-
-?>
+$gBitSmarty->assign('gContent', $gContent);
+$gBitSystem->display( 'bitpackage:blogs/edit_blog.tpl', null, array( 'display_mode' => 'edit' ));
