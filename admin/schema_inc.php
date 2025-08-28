@@ -1,6 +1,6 @@
 <?php
 
-$tables = array(
+$tables = [
 
 'blog_posts' => "
 	post_id I4 PRIMARY,
@@ -36,7 +36,7 @@ $tables = array(
 				, CONSTRAINT `blogs_posts_map_blog_ref` FOREIGN KEY (`blog_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 ",
 
-);
+];
 
 global $gBitInstaller;
 
@@ -44,61 +44,61 @@ foreach( array_keys( $tables ) AS $tableName ) {
 	$gBitInstaller->registerSchemaTable( BLOGS_PKG_NAME, $tableName, $tables[$tableName] );
 }
 
-$gBitInstaller->registerPackageInfo( BLOGS_PKG_NAME, array(
+$gBitInstaller->registerPackageInfo( BLOGS_PKG_NAME, [
 	'description' => "A Blog is a web based journal or diary.",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-) );
+] );
 
 // ### Indexes
-$indices = array (
-	'blog_posts_post_id_idx'    => array( 'table' => 'blog_posts', 'cols' => 'post_id',    'opts' => NULL ),
-	'blogs_content_id_idx'      => array( 'table' => 'blogs',      'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
-	'blog_posts_content_id_idx' => array( 'table' => 'blog_posts', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
-);
+$indices = [
+	'blog_posts_post_id_idx'    => [ 'table' => 'blog_posts', 'cols' => 'post_id',    'opts' => null ],
+	'blogs_content_id_idx'      => [ 'table' => 'blogs',      'cols' => 'content_id', 'opts' => [ 'UNIQUE' ] ],
+	'blog_posts_content_id_idx' => [ 'table' => 'blog_posts', 'cols' => 'content_id', 'opts' => [ 'UNIQUE' ] ],
+];
 /** @TODO - SPIDERR - following seems to cause time _decrease_ cause bigint on postgres. need more investigation
- *	'blog_posts_created_idx' => array( 'table' => 'blog_posts', 'cols' => 'created', 'opts' => NULL ),
+ *	'blog_posts_created_idx' => [ 'table' => 'blog_posts', 'cols' => 'created', 'opts' => null ],
  **/
 $gBitInstaller->registerSchemaIndexes( BLOGS_PKG_NAME, $indices );
 
 // ### Sequences
-$sequences = array (
-	'blogs_blog_id_seq'      => array( 'start' => 1 ),
-	'blog_posts_post_id_seq' => array( 'start' => 1 )
-);
+$sequences = [
+	'blogs_blog_id_seq'      => [ 'start' => 1 ],
+	'blog_posts_post_id_seq' => [ 'start' => 1 ]
+];
 $gBitInstaller->registerSchemaSequences( BLOGS_PKG_NAME, $sequences );
 
 // ### Default UserPermissions
-$gBitInstaller->registerUserPermissions( BLOGS_PKG_NAME, array(
-	array('p_blogs_create', 'Can create a blog', 'registered', BLOGS_PKG_NAME),
-	array('p_blogs_create_is_public', 'Can create a public blog', 'editors', BLOGS_PKG_NAME),
-	array('p_blogs_post', 'Can create a blog post', 'registered', BLOGS_PKG_NAME),
-	array('p_blogs_update', 'Can update blogs and blog posts', 'editors', BLOGS_PKG_NAME),
-	array('p_blogs_send_post', 'Can email a blog post', 'registered', BLOGS_PKG_NAME),
-	array('p_blogs_admin', 'Can admin blogs', 'editors', BLOGS_PKG_NAME),
-	array('p_blogs_view', 'Can read blogs', 'basic', BLOGS_PKG_NAME),
-	array('p_blog_posts_read_future', 'Can view future dated posts', 'editors', BLOGS_PKG_NAME),
-	array('p_blog_posts_read_expired', 'Can view expired posts', 'editors', BLOGS_PKG_NAME)
-) );
+$gBitInstaller->registerUserPermissions( BLOGS_PKG_NAME, [ 
+	[ 'p_blogs_create', 'Can create a blog', 'registered', BLOGS_PKG_NAME ],
+	[ 'p_blogs_create_is_public', 'Can create a public blog', 'editors', BLOGS_PKG_NAME ],
+	[ 'p_blogs_post', 'Can create a blog post', 'registered', BLOGS_PKG_NAME ],
+	[ 'p_blogs_update', 'Can update blogs and blog posts', 'editors', BLOGS_PKG_NAME ],
+	[ 'p_blogs_send_post', 'Can email a blog post', 'registered', BLOGS_PKG_NAME ],
+	[ 'p_blogs_admin', 'Can admin blogs', 'editors', BLOGS_PKG_NAME ],
+	[ 'p_blogs_view', 'Can read blogs', 'basic', BLOGS_PKG_NAME ],
+	[ 'p_blog_posts_read_future', 'Can view future dated posts', 'editors', BLOGS_PKG_NAME ],
+	[ 'p_blog_posts_read_expired', 'Can view expired posts', 'editors', BLOGS_PKG_NAME ]
+] );
 
 // ### Default Preferences
-$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, array(
-	array( BLOGS_PKG_NAME, 'blog_list_activity','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_created','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_description','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_lastmodif','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_order','created_desc'),
-	array( BLOGS_PKG_NAME, 'blog_list_posts','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_title','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_user','n'),
-	array( BLOGS_PKG_NAME, 'blog_list_visits','y'),
-	array( BLOGS_PKG_NAME, 'blog_categ','n'),
-	array( BLOGS_PKG_NAME, 'blog_parent_categ',0),
-	array( BLOGS_PKG_NAME, 'blog_posts_comments','n'),
-	array( BLOGS_PKG_NAME, 'blog_rankings','y'),
-	array( BLOGS_PKG_NAME, 'blog_list_user_as', 'text'),
-	array( BLOGS_PKG_NAME, 'blog_posts_description_length', '500'),
-	array( BLOGS_PKG_NAME, 'blog_posts_max_list','10'),
-) );
+$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, [
+	[ BLOGS_PKG_NAME, 'blog_list_activity','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_created','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_description','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_lastmodif','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_order','created_desc'],
+	[ BLOGS_PKG_NAME, 'blog_list_posts','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_title','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_user','n'],
+	[ BLOGS_PKG_NAME, 'blog_list_visits','y'],
+	[ BLOGS_PKG_NAME, 'blog_categ','n'],
+	[ BLOGS_PKG_NAME, 'blog_parent_categ',0],
+	[ BLOGS_PKG_NAME, 'blog_posts_comments','n'],
+	[ BLOGS_PKG_NAME, 'blog_rankings','y'],
+	[ BLOGS_PKG_NAME, 'blog_list_user_as', 'text'],
+	[ BLOGS_PKG_NAME, 'blog_posts_description_length', '500'],
+	[ BLOGS_PKG_NAME, 'blog_posts_max_list','10'],
+] );
 
 // ### User Preferences Set In This Package
 /** These are mentioned here for reference to understand how the package works
@@ -115,19 +115,19 @@ $gBitInstaller->registerPreferences( BLOGS_PKG_NAME, array(
  **/
 
 if(defined('RSS_PKG_NAME')) {
-	$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, array(
-		array( RSS_PKG_NAME, BLOGS_PKG_NAME.'_rss', 'y'),
-	));
+	$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, [ 
+		[ RSS_PKG_NAME, BLOGS_PKG_NAME.'_rss', 'y' ],
+	]);
 }
 
 // ### Register content types
-$gBitInstaller->registerContentObjects( BLOGS_PKG_NAME, array( 
+$gBitInstaller->registerContentObjects( BLOGS_PKG_NAME, [
 	'BitBlog'=>BLOGS_PKG_CLASS_PATH.'BitBlog.php',
 	'BitBlogPost'=>BLOGS_PKG_CLASS_PATH.'BitBlogPost.php'
-));
+] );
 
 // Requirements
-$gBitInstaller->registerRequirements( BLOGS_PKG_NAME, array(
-	'liberty' => array( 'min' => '2.1.4' ),
-));
+$gBitInstaller->registerRequirements( BLOGS_PKG_NAME, [ 
+	'liberty' => [ 'min' => '5.0.0' ],
+] );
 

@@ -17,16 +17,15 @@
  * You need to have liberty_allow_change_owner on for post ownership to work right. Otherwise all posts will be owned by admin.
  */
 
-require_once( '../../kernel/includes/setup_inc.php' );
-
-//require_once(USERS_PKG_PATH.'RoleUser.php');
-require_once(BLOGS_PKG_CLASS_PATH.'BitBlog.php');
-require_once(BLOGS_PKG_CLASS_PATH.'BitBlogPost.php');
-require_once(LIBERTY_PKG_CLASS_PATH.'LibertyComment.php');
+namespace Bitweaver\Blogs;
+require_once '../../kernel/includes/setup_inc.php';
+use Bitweaver\KernelTools;
+use Bitweaver\Liberty\LibertyComment;
+use Bitweaver\Users\RoleUser;
 
 $gBitSystem->verifyPermission( 'p_admin' );
 
-$_SESSION['captcha_verified'] = TRUE;
+$_SESSION['captcha_verified'] = true;
 
 // To Run from the command line uncomment and set the right value here.
 # $_REQUEST['wp_config'] = "/path/to/wordpress/";
@@ -35,16 +34,16 @@ if (isset($_REQUEST['wp_config'])) {
 	$config = $_REQUEST['wp_config']."/wp-config.php";
 	$format = $_REQUEST['wp_config']."/wp-includes/functions-formatting.php";
 	if (file_exists($config)) {
-		require_once($config);
-		require_once($format);
+		require_once $config;
+		require_once $format;
 		migrate_wp();
 	} else {
-		$errors['error'] = tra("The config file and format-function file do not exist.");
+		$errors['error'] = KernelTools::tra("The config file and format-function file do not exist.");
 		$gBitSmarty->assign('errors', $errors);
 	}
 	$gBitSmarty->assign('wp_config', $_REQUEST['wp_config']);
 }
-$gBitSystem->display("bitpackage:blogs/wp-migrate.tpl", tra("WordPress Migrate"), array( 'display_mode' => 'admin' ));
+$gBitSystem->display("bitpackage:blogs/wp-migrate.tpl", KernelTools::tra("WordPress Migrate"), array( 'display_mode' => 'admin' ));
 die;
 
 function migrate_wp() {
@@ -65,7 +64,7 @@ function migrate_wp() {
 	migrate_wp_comments();
 	$gBitSystem->storeConfig('blogs_wp_migration', 'y', 'blogs');
 
-	$errors['success'] = tra("Your migration is complete.");
+	$errors['success'] = KernelTools::tra("Your migration is complete.");
 	$gBitSmarty->assign('errorMap', $gErrorMap);
 	$gBitSmarty->assign('errors', $errors);
 }
@@ -81,10 +80,10 @@ function setup_migration() {
 			'blogs_wp_comments' => "wp_id INT PRIMARY, comment_id INT NOTNULL",
 			);
 		$gBitSystem->mDb->createTables($tables);
-		$gUserMap = array();
-		$gBlogMap = array();
-		$gPostMap = array();
-		$gCommentMap = array();
+		$gUserMap = [];
+		$gBlogMap = [];
+		$gPostMap = [];
+		$gCommentMap = [];
 		$gMaxUser = -1;
 		$gMaxBlog = -1;
 		$gMaxPost = -1;
@@ -118,12 +117,12 @@ function migrate_wp_users() {
 
 	// Get everybody with a post
 	$query = "select distinct(u.ID) from ".$wpdb->table_prefix."wp_users u INNER JOIN ".$wpdb->table_prefix."wp_comments c ON (u.ID = c.user_id) WHERE u.ID != 1";
-	$post_users = $wpdb->get_results($query, ARRAY_A);
+	$post_users = $wpdb->get_results($query, null);
 	// Get everybody with a comment
 	$query = "select distinct(u.ID) from ". $wpdb->table_prefix."wp_users u INNER JOIN ".$wpdb->table_prefix."wp_posts p ON (u.ID = p.post_author) WHERE u.ID != 1";
-	$comment_users = $wpdb->get_results($query, ARRAY_A);
+	$comment_users = $wpdb->get_results($query, null);
 
-	$users = array();
+	$users = [];
 	foreach ($post_users as $key => $data) {
 		$users[$data['ID']] = $data['ID'];
 	}
@@ -139,8 +138,8 @@ function migrate_wp_users() {
 	//  vd($user_data);
 	if (!empty($user_data)) {
 		foreach($user_data as $data) {
-			$bu = new BitUser();
-			$pParamHash = array();
+			$bu = new RoleUser();
+			$pParamHash = [];
 			// Strip out characters that bitweaver doesn't support in logins.
 			preg_match_all( '/[A-Za-z0-9_-]*/', $data->login, $matches);
 			//    vd($matches);
@@ -185,7 +184,7 @@ function migrate_wp_categories() {
 		foreach ($blog_data as $blog) {
 			//    vd($blog);
 			$b = new BitBlog();
-			$pParamHash = array();
+			$pParamHash = [];
 			$pParamHash['title'] = $blog->cat_name;
 			$pParamHash['use_title'] = 'y';
 
@@ -224,14 +223,11 @@ function migrate_wp_posts() {
 
 	if (!empty($posts)) {
 		foreach ($posts as $post) {
-			$pParamHash = array();
+			$pParamHash = [];
 			$pParamHash['data'] = wptexturize(convert_chars(wpautop($post->post_content)));
 			$pParamHash['title'] = $post->post_title;
-			if ($post->post_status == 'draft') {
-				$pParamHash['content_status'] = -5;
-			} else {
-				$pParamHash['content_status'] = 50;
-			}
+			$pParamHash['content_status'] = $post->post_status == 'draft' ? -5 : 50;
+
 			$pParamHash['publish_date'] = $gBitSystem->mServerTimestamp->getTimestampFromIso($post->post_date_gmt);
 			$pParamHash['last_modified'] = $gBitSystem->mServerTimestamp->getTimestampFromIso($post->post_modified_gmt);
 			if (empty($gUserMap[$post->post_author])) {
@@ -307,7 +303,7 @@ function migrate_wp_comments() {
 	if (!empty($comments)) {
 		foreach ($comments as $comment) {
 			//    vd($comment);
-			$pParamHash = array();
+			$pParamHash = [];
 			$pParamHash['edit'] = wptexturize(convert_chars(wpautop($comment->comment_content)));
 			if (empty($comment->user_id)) {
 				$pParamHash['annon_name'] = $comment->comment_author;
@@ -320,11 +316,8 @@ function migrate_wp_comments() {
 					$pParamHash['current_owner_id'] = -1;
 				}
 			}
-			if ($comment->comment_approved) {
-				$pParamHash['content_status'] = 50;
-			} else {
-				$pParamHash['content_status'] = -1;
-			}
+			$pParamHash['content_status'] = $comment->comment_approved ? 50 : -1;
+
 			$pParamHash['last_modified'] = $gBitSystem->mServerTimestamp->getTimestampFromIso($comment->comment_date_gmt);
 			if (!empty($gPostMap[$comment->comment_post_ID])) {
 				$pParamHash['root_id'] = $gPostMap[$comment->comment_post_ID];
@@ -352,5 +345,3 @@ function migrate_wp_comments() {
 		}
 	}
 }
-
-?>
