@@ -31,13 +31,13 @@
 						<a title="{tr}Crosspost{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?post_id={$post_info.post_id}">{booticon iname="icon-paperclip"  ipackage="icons"  iexplain="Crosspost"}</a>
 					{/if}
 
-					<a title="{tr}Print{/tr}" style="display:none;" href="{$smarty.const.BLOGS_PKG_URL}print_blog_post.php?post_id={$post_info.post_id}">{booticon iname="icon-print"  ipackage="icons"  iexplain="Print"}</a>
+					<a title="{tr}Print{/tr}" href="{$smarty.const.BLOGS_PKG_URL}print_blog_post.php?post_id={$post_info.post_id}">{booticon iname="icon-print"  ipackage="icons"  iexplain="Print"}</a>
 					{if $gBitUser->hasPermission('p_blogs_send_post')}
 						<a title="{tr}Email This Post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}send_post.php?post_id={$post_info.post_id}">{booticon iname="icon-envelope"  ipackage="icons"  iexplain="Email This Post"}</a>
 					{/if}
 
 					{if $gContent->hasUpdatePermission()}
-						<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$post_info.blog_id}&amp;post_id={$post_info.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
+						<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$post_info.blog_id|default:0}&amp;post_id={$post_info.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
 					{/if}
 					{if $gContent->hasUserPermission( 'p_blogs_admin' )}
 						<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$post_info.post_id}&amp;status_id=300">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
