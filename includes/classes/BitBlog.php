@@ -112,7 +112,7 @@ class BitBlog extends LibertyMime {
 		$lookupId = !empty( $pBlogId ) ? $pBlogId : $pContentId;
 		$lookupColumn = !empty( $pBlogId ) ? 'blog_id' : 'content_id';
 
-		$bindVars = array( (int)$lookupId );
+		$bindVars = [ (int) $lookupId ];
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
 		$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
@@ -136,10 +136,10 @@ class BitBlog extends LibertyMime {
 			if( $this->mInfo = $this->mDb->getRow($query,$bindVars) ) {
 				$this->mContentId = $this->getField( 'content_id' );
 				$this->mBlogId = $this->getField('blog_id');
-				foreach( array( 'avatar', 'image' ) as $img ) {
-					$this->mInfo[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( array(
-						'source_file' => $this->getSourceFile( array( 'user_id'=>$this->getField( 'user_id' ), 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( array( 'type' => $this->getField( $img.'_mime_type' ), 'name' =>  $this->getField( $img.'_file_name' ) ) ), 'file_name' => basename( $this->mInfo[$img.'_file_name'] ?? '' ), 'sub_dir' =>  $this->getField( $img.'_attachment_id' ) ) )
-					));
+				foreach( [ 'avatar', 'image' ] as $img ) {
+					$this->mInfo[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( [
+						'source_file' => $this->getSourceFile( [ 'user_id' => $this->getField( 'user_id' ), 'package' => \Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( [ 'type' => $this->getField( "{$img}_mime_type" ), 'name' => $this->getField( "{$img}_file_name" ) ] ), 'file_name' => basename( $this->mInfo["{$img}_file_name"] ?? '' ), 'sub_dir' => $this->getField( "{$img}_attachment_id" ) ] ),
+					]);
 				}
 				parent::load();
 				$this->mInfo['postscant'] = $this->getPostsCount( $this->mContentId );
@@ -170,7 +170,7 @@ class BitBlog extends LibertyMime {
 		if( $this->verify( $pParamHash ) && parent::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."blogs";
 			if( $this->isValid() ) {
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['blog_store'], array( "blog_id" => $pParamHash['blog_id'] ) );
+				$result = $this->mDb->associateUpdate( $table, $pParamHash['blog_store'], [ "blog_id" => $pParamHash['blog_id'] ] );
 			} else {
 				// DEPRECATED - this looks stupid -wjames5
 				//$pParamHash['blog_store']['posts'] = 0;
@@ -193,7 +193,7 @@ class BitBlog extends LibertyMime {
 
 			// remove all references in blogs_posts_map where post_content_id = content_id
 			$query_map = "DELETE FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `blog_content_id` = ?";
-			$result = $this->mDb->query( $query_map, array( $this->mContentId ) );
+			$result = $this->mDb->query( $query_map, [ $this->mContentId ] );
 
 			$query = "DELETE from `".BIT_DB_PREFIX."blogs` where `content_id`=?";
 			$result = $this->mDb->query( $query, [ (int) $this->mContentId ] );
@@ -222,7 +222,7 @@ class BitBlog extends LibertyMime {
 						INNER JOIN `".BIT_DB_PREFIX."blogs_posts_map` bpm ON (bp.`content_id`=bpm.`post_content_id`)
 						INNER JOIN `".BIT_DB_PREFIX."blogs` b on (bpm.`blog_content_id`=b.`content_id`)
 					WHERE b.`blog_id` = ? ORDER BY ".$this->mDb->convertSortMode( $pListHash['sort_mode'] );
-			if( $postId = $this->mDb->getOne($sql, array( $blogId ) ) ) {
+			if( $postId = $this->mDb->getOne($sql, [ $blogId ] ) ) {
 				$blogPost = new BitBlogPost( $postId );
 				$blogPost->load( null, $pListHash );
 				$ret = $blogPost;
@@ -251,7 +251,7 @@ class BitBlog extends LibertyMime {
 			else {
 				$findesc = '%' . strtoupper( $pParamHash['find'] ) . '%';
 				$whereSql = " AND (UPPER(lc.`title`) like ? or UPPER(lc.`data`) like ?) ";
-				$bindVars=array($findesc,$findesc);
+				$bindVars= [ $findesc, $findesc ];
 			}
 		}
 		if( @$this->verifyId( $pParamHash['user_id'] ?? 0 ) ) {
@@ -339,7 +339,7 @@ class BitBlog extends LibertyMime {
 		$ret = null;
 		if( @$this->verifyId( $pBlogContentId ) ) {
 			$whereSql = 'bpm.`blog_content_id` = ?';
-			$bindVars = array((int)$pBlogContentId);
+			$bindVars = [ (int) $pBlogContentId ];
 			BitBlogPost::getDateRestrictions([], $whereSql, $bindVars);
 			$query = "SELECT COUNT(*)
 				FROM `".BIT_DB_PREFIX."blogs_posts_map` bpm
@@ -412,6 +412,6 @@ function blogs_module_display(&$pParamHash){
 	global $gBitThemes, $gBitSmarty, $gBitSystem;
 	if( $gBitThemes->isModuleLoaded( 'bitpackage:blogs/center_list_blog_posts.tpl', 'c' ) && $gBitSystem->isFeatureActive( 'blog_ajax_more' ) && $gBitThemes->isJavascriptEnabled() ) {
 		$gBitSmarty->assign( 'ajax_more', true );
-		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js', 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ));
+		$gBitThemes->loadAjax( 'mochikit', [ 'Iter.js', 'DOM.js', 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ]);
 	}
 }
