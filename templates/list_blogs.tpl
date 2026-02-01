@@ -44,7 +44,7 @@
 				<li class="item {cycle values='odd,even'}">
 					<div class="floaticon">
 						{if $gBitUser->hasPermission( 'p_liberty_assign_content_perms' ) and $listBlog.content_id}
-							{if $gContent->mPerms} {* org note from liberty:service_content_icon_inc: don't think there is a serviceHash way of working out if there are individual permissions set *}
+							{if !empty($gContent->mPerms)} {* org note from liberty:service_content_icon_inc: don't think there is a serviceHash way of working out if there are individual permissions set *}
 								{assign var=perm_icon value="icon-lock"}
 							{else}
 								{assign var=perm_icon value="icon-key"}
