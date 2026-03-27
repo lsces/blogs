@@ -16,7 +16,7 @@
 								{formlabel label="Blogs this Post is Already Crossposted To" for="blog_id"}
 								{forminput}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											{if $gContent->mInfo.blogs.$blogContentId and ($blogContentId != $crosspost.blog_content_id) }
+											{if $gContent->mInfo.blogs.$blogContentId && ($blogContentId != $crosspost.blog_content_id) }
 												{assign var="has_crosspost" value=true}
 												{$availBlogTitle|escape}
 												&nbsp;<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?blog_content_id={$blogContentId}&amp;post_id={$post_info.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit crosspost note"}</a>
@@ -37,7 +37,7 @@
 								{formlabel label="Include in Blogs" for="blog_id"}
 								{forminput}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											{if !$gContent->mInfo.blogs.$blogContentId or ($blogContentId == $crosspost.blog_content_id) }
+											{if !$gContent->mInfo.blogs.$blogContentId || ($blogContentId == $crosspost.blog_content_id) }
 												{assign var="has_crosspost_option" value=true}
 												<input name="blog_content_id[]" type="checkbox" option value="{$blogContentId}" {if $blogContentId == $crosspost.blog_content_id}checked="checked"{/if}>{$availBlogTitle|escape}</option><br/>
 											{/if}
@@ -108,7 +108,7 @@
 					{if count($post_info.blogs) > 0}
 						{tr}Posted to{/tr}
 						{foreach from=$post_info.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
-							<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 and !$smarty.foreach.memberBlogLoop.last }, {/if}
+							<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
 						{/foreach}
 					<br />
 					{/if}
@@ -126,7 +126,7 @@
 			<div class="footer">
 				<a href="{$post_info.display_url}" rel="bookmark">{tr}Permalink{/tr}</a>
 				{tr}referenced by{/tr} {$post_info.trackbacks_from_count} {tr}posts{/tr} | {tr}references{/tr} {$post_info.trackbacks_to_count} {tr}posts{/tr}
-				{if $post_info.allow_comments eq 'y' and $gBitSystem->isFeatureActive( 'blog_posts_comments' )}
+				{if $post_info.allow_comments eq 'y' && $gBitSystem->isFeatureActive( 'blog_posts_comments' )}
 					| {$post_info.num_comments} {tr}comments{/tr}
 				{/if}
 			</div> {* end .footer *}

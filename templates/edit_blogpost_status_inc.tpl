@@ -1,4 +1,4 @@
-{if $gBitSystem->isFeatureActive( 'liberty_display_status' ) and $gBitSystem->isFeatureActive( 'liberty_display_status_menu' ) and ($gBitUser->hasPermission('p_liberty_edit_content_status') or $gBitUser->hasPermission('p_liberty_edit_all_status'))}
+{if $gBitSystem->isFeatureActive( 'liberty_display_status' ) && $gBitSystem->isFeatureActive( 'liberty_display_status_menu' ) && ($gBitUser->hasPermission('p_liberty_edit_content_status') || $gBitUser->hasPermission('p_liberty_edit_all_status'))}
 	<div class="form-group">
 		{formlabel label="Publish Status" for="content_status_id"}
 		{forminput}

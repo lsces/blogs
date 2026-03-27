@@ -1,6 +1,6 @@
 {* $Header$ *}
 {strip}
-{if $gBitSystem->isPackageActive( 'blogs' ) and $modLastCreatedBlogs}
+{if $gBitSystem->isPackageActive( 'blogs' ) && $modLastCreatedBlogs}
 	{if $nonums eq 'y'}
 		{eval var="{tr}Last `$module_rows` Created blogs{/tr}" assign="tpl_module_title"}
 	{else}

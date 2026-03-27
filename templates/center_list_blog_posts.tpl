@@ -1,5 +1,5 @@
 {* $Header$ *}
-{if !( $smarty.request.home|default:true and $gBitSystem->isFeatureActive('blog_hide_empty_usr_list') ) }
+{if !( $smarty.request.home|default:true && $gBitSystem->isFeatureActive('blog_hide_empty_usr_list') ) }
 <div class="floaticon">{bithelp}</div>
 
 <div class="display blogs">
@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="body">
-		{if ($gBitUser->hasPermission( 'p_blog_posts_read_future' ) or $gBitUser->isAdmin() ) and $futures}
+		{if ($gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin() ) && $futures}
 			<h3>{tr}Upcoming Blog Posts{/tr}</h3>
 			<ul>
 				{foreach from=$futures item=future}

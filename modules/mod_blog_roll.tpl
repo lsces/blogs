@@ -1,6 +1,6 @@
 {* $Header$ *}
 {strip}
-{if $gBitSystem->isPackageActive( 'blogs' ) and $modBlogs}
+{if $gBitSystem->isPackageActive( 'blogs' ) && $modBlogs}
 	{bitmodule title="$moduleTitle" name="blog_roll"}
 		<ul class="blogs">
 			{foreach from=$modBlogs item=blog key=blogId}

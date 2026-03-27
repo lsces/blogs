@@ -1,7 +1,7 @@
 {strip}
 {* This template is used by the blogs plugin to liberty. *}
 <div class="post"
-	{if $gBitUser->getPreference( 'users_double_click' ) and (($aPost.ownsblog eq 'y') or ($gBitUser->mUserId and $aPost.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' ))}
+	{if $gBitUser->getPreference( 'users_double_click' ) && (($aPost.ownsblog eq 'y') || ($gBitUser->mUserId && $aPost.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' ))}
 		ondblclick="location.href='{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}{$blog_id}&amp;post_id={$aPost.post_id}{$post_id}';"
 	{/if}
 >
@@ -17,7 +17,7 @@
 				<a title="{tr}Email this post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}send_post.php?post_id={$aPost.post_id}">{booticon iname="icon-envelope"  ipackage="icons"  iexplain="email this post"}</a>
 			{/if}
 
-			{if ($aPost.ownsblog eq 'y') or ($gBitUser->mUserId and $aPost.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' )}
+			{if ($aPost.ownsblog eq 'y') || ($gBitUser->mUserId && $aPost.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
 				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
 				<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$aPost.post_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
 			{/if}
@@ -36,7 +36,7 @@
 		<div class="date">
 			{if $gBitSystem->getConfig('blog_list_user_as') eq 'link'}
 				{tr}By{/tr} {displayname hash=$aPost}
-			{elseif $gBitSystem->getConfig('blog_list_user_as') eq 'avatar' and $aPost.avatar}
+			{elseif $gBitSystem->getConfig('blog_list_user_as') eq 'avatar' && $aPost.avatar}
 				<img src="{$aPost.avatar}" class="avatar" />
 			{else}
 				{tr}By{/tr} {displayname hash=$aPost nolink=true}
@@ -46,7 +46,7 @@
 			{if count($aPost.blogs) > 0}
 				{tr}Posted to{/tr}&nbsp;
 				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
-					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 and !$smarty.foreach.memberBlogLoop.last }, {/if}
+					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
 				{/foreach}
 				<br />
 			{/if}
@@ -62,7 +62,7 @@
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$aPost}
 			
 			{* deal with the blog post image if there is one *}
-			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) and $aPost.thumbnail_url}
+			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) && $aPost.thumbnail_url}
 				<div class="image">
 					{jspopup notra=1 href=$aPost.thumbnail_url.original alt=$aPost.title|escape title=$aPost.title|escape img=$aPost.thumbnail_url.medium}
 				</div>
@@ -86,7 +86,7 @@
 		<a href="{$aPost.post_url}" rel="bookmark">{tr}Permalink{/tr}</a>
 		{assign var=spacer value=true}
 
-		{if $showDescriptionsOnly and $aPost.has_more}
+		{if $showDescriptionsOnly && $aPost.has_more}
 			{if $spacer}&nbsp; &bull; &nbsp;{/if}
 			{assign var=spacer value=true}
 			{if $ajax_more}

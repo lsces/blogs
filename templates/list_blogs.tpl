@@ -43,7 +43,7 @@
 			{foreach from=$blogsList item=listBlog key=blogContentId}
 				<li class="item {cycle values='odd,even'}">
 					<div class="floaticon">
-						{if $gBitUser->hasPermission( 'p_liberty_assign_content_perms' ) and $listBlog.content_id}
+						{if $gBitUser->hasPermission( 'p_liberty_assign_content_perms' ) && $listBlog.content_id}
 							{if !empty($gContent->mPerms)} {* org note from liberty:service_content_icon_inc: don't think there is a serviceHash way of working out if there are individual permissions set *}
 								{assign var=perm_icon value="icon-lock"}
 							{else}
@@ -56,13 +56,13 @@
 							{/if}
 						{/if}
 
-						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) or ($gBitUser->hasPermission( 'p_blogs_admin' )) or ($listBlog.is_public eq 'y')}
+						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || ($gBitUser->hasPermission( 'p_blogs_admin' )) || ($listBlog.is_public eq 'y')}
 									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="post"}</a>
 						{/if}
-						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' )}
+						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
 							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{booticon iname="icon-file"  ipackage="icons"  iexplain="configure"}</a>
 						{/if}
-						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' )}
+						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
 							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
 						{/if}
 					</div>

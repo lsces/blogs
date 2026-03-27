@@ -16,7 +16,7 @@
 			<a title="{tr}Edit blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$gContent->mBlogId}">{booticon iname="icon-file"  ipackage="icons"  iexplain="edit"}</a>
 		{/if}
 
-		{if $gBitUser->isRegistered() and $gBitSystem->isFeatureActive( 'users_watches' )}
+		{if $gBitUser->isRegistered() && $gBitSystem->isFeatureActive( 'users_watches' )}
 			{if $user_watching_blog eq 'n'}
 				<a title="{tr}monitor this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=add">{booticon iname="icon-asterisk"  ipackage="icons"  iexplain="monitor this blog"}</a>
 			{else}

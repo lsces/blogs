@@ -58,21 +58,21 @@
 
 						<div class="form-group">
 							{forminput label="checkbox"}
-								<input type="checkbox" name="use_title" id="use_title" {if !$gContent->isValid() or $gContent->getField('use_title') eq 'y'}checked="checked"{/if} />Use titles in blog posts
+								<input type="checkbox" name="use_title" id="use_title" {if !$gContent->isValid() || $gContent->getField('use_title') eq 'y'}checked="checked"{/if} />Use titles in blog posts
 								{formhelp note='If this is not selected, the time and date of when the post was created will be displayed instead of the post title.'}
 							{/forminput}
 						</div>
 
 						<div class="form-group">
 							{forminput label="checkbox"}
-								<input type="checkbox" name="use_find" id="use_find" {if !$gContent->isValid() or $gContent->getField('use_find') eq 'y'}checked="checked"{/if} />Allow search
+								<input type="checkbox" name="use_find" id="use_find" {if !$gContent->isValid() || $gContent->getField('use_find') eq 'y'}checked="checked"{/if} />Allow search
 								{formhelp note='Allow users to search this blog for occurances of words.'}
 							{/forminput}
 						</div>
 
 						<div class="form-group">
 							{forminput label="checkbox"}
-								<input type="checkbox" name="allow_comments" id="allow_comments" {if !$gContent->isValid() or $gContent->getField('allow_comments') eq 'y'}checked="checked"{/if} />Allow comments
+								<input type="checkbox" name="allow_comments" id="allow_comments" {if !$gContent->isValid() || $gContent->getField('allow_comments') eq 'y'}checked="checked"{/if} />Allow comments
 								{formhelp note='Are other users allowed to add comments to posts made in this blog?'}
 							{/forminput}
 						</div>

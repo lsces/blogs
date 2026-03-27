@@ -1,6 +1,6 @@
 {* $Header$ *}
 {strip}
-{if $gBitSystem->isPackageActive( 'blogs' ) and $gBitUser->hasPermission( 'p_blogs_view' )}
+{if $gBitSystem->isPackageActive( 'blogs' ) && $gBitUser->hasPermission( 'p_blogs_view' )}
 	{if $nonums eq 'y'}
 		{eval var="`$module_rows` {tr}Most Active blogs{/tr}" assign="tpl_module_title"}
 	{else}
