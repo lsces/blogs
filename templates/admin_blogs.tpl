@@ -3,7 +3,7 @@
 	{jstabs}
 		{jstab title="Blog Features"}
 			{legend legend="Home Blog"}
-				<input type="hidden" name="page" value="{$page}" />
+				<input type="hidden" name="page" value="{$page|default:''}" />
 				<div class="form-group">
 					{formlabel label="Home Blog (main blog)" for="blog_home"}
 					{forminput}
@@ -33,7 +33,7 @@
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
-							{formhelp note=$output.note page=$output.page}
+							{formhelp note=$output.note|default:'' page=$output.page|default:''}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -51,7 +51,7 @@
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							<input type="text" name="$item" value="{$gBitSystem->getConfig($item, 3)}" id="{$item}" />
-							{formhelp note=$output.note page=$output.page}
+							{formhelp note=$output.note|default:'' page=$output.page|default:''}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -99,14 +99,14 @@
 
 		{jstab title="List Settings"}
 			{legend legend="List Settings"}
-				<input type="hidden" name="page" value="{$page}" />
+				<input type="hidden" name="page" value="{$page|default:''}" />
 
 				{foreach from=$formBlogLists key=item item=output}
 					<div class="form-group">
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
-							{formhelp note=$output.note page=$output.page}
+							{formhelp note=$output.note|default:'' page=$output.page|default:''}
 						{/forminput}
 					</div>
 				{/foreach}

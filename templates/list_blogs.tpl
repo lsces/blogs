@@ -56,7 +56,7 @@
 							{/if}
 						{/if}
 
-						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) || ($gBitUser->hasPermission( 'p_blogs_admin' )) or ($listBlog.is_public eq 'y')}
+						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) or ($gBitUser->hasPermission( 'p_blogs_admin' )) or ($listBlog.is_public eq 'y')}
 									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="post"}</a>
 						{/if}
 						{if ($gBitUser->mUserId and $listBlog.user_id eq $gBitUser->mUserId) or $gBitUser->hasPermission( 'p_blogs_admin' )}

@@ -25,7 +25,7 @@
 			{jstabs}
 				{jstab title="Blog Post"}
 					{legend legend="Post"}
-						{* if !$blog_data.use_title || $blog_data.use_title eq 'y' *}
+						{* if !$blog_data.use_title or $blog_data.use_title eq 'y' *}
 							<div class="form-group">
 								{formlabel label="Title" for="title"}
 								{forminput}
@@ -63,12 +63,12 @@
 									{if count($availableBlogs) > 10}
 										<select name="blog_content_id[]" size="6" id="blog_id" multiple="multiple">
 											{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-												<option value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) || $blogContentId == $smarty.request.blog_id}selected="selected"{/if}>{$availBlogTitle|escape}</option>
+												<option value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) or $blogContentId == $smarty.request.blog_id}selected="selected"{/if}>{$availBlogTitle|escape}</option>
 											{/foreach}
 										</select>
 									{else}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											<input name="blog_content_id[]" type="checkbox" value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) || $blogContentId == $smarty.request.blog_id or $blogContentId == $default_target_blog_content_id}checked="checked"{/if} /> {$availBlogTitle|escape}<br/>
+											<input name="blog_content_id[]" type="checkbox" value="{$blogContentId}" {if !empty($gContent->mInfo.blogs.$blogContentId) or $blogContentId == $smarty.request.blog_id or $blogContentId == $default_target_blog_content_id}checked="checked"{/if} /> {$availBlogTitle|escape}<br/>
 										{/foreach}
 									{/if}
 									{formhelp note="You can cross post to any and all of the blogs listed above.<br />Just check off the blogs you wish this post to also show up in."}

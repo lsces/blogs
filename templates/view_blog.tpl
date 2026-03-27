@@ -9,7 +9,7 @@
 		{/if}
 
 		{if $gBitSystem->isPackageActive( 'rss' )}
-			<a title="{tr}RSS feed{/tr}" href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?blog_id={$gContent->mBlogId}">{biticon ipackage="rss" iname="rss-16x16" iexplain="RSS feed"}</a>
+			<a title="{tr}RSS feed{/tr}" href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?blog_id={$gContent->mBlogId}">{booticon iname="icon-rss" ipackage="icons" iexplain="RSS feed"}</a>
 		{/if}
 
 		{if $gContent->hasUpdatePermission()}
@@ -20,7 +20,7 @@
 			{if $user_watching_blog eq 'n'}
 				<a title="{tr}monitor this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=add">{booticon iname="icon-asterisk"  ipackage="icons"  iexplain="monitor this blog"}</a>
 			{else}
-				<a title="{tr}stop monitoring this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=remove">{biticon ipackage="icons" iname="weather-clear-night" iexplain="stop monitoring this blog"}</a>
+				<a title="{tr}stop monitoring this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=remove">{booticon ipackage="icons" iname="weather-clear-night" iexplain="stop monitoring this blog"}</a>
 			{/if}
 		{/if}
 

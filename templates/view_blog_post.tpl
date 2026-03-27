@@ -23,8 +23,8 @@
 			<div class="floaticon">
 				{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$post_info}
 				{if $gBitUser->hasPermission( 'p_users_view_icons_and_tools' )}
-					{if $gBitSystem->isPackageActive( 'rss' ) && $gBitSystem->isFeatureActive( 'rss_blogs' )}
-						<a href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?user_id={$post_info.user_id}">{booticon iname="icon-rss" iexplain="RSS feed"}</a>
+					{if $gBitSystem->isPackageActive( 'rss' ) and $gBitSystem->isFeatureActive( 'rss_blogs' )}
+						<a href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?user_id={$post_info.user_id}">{booticon iname="icon-rss"  ipackage="icons" iexplain="RSS feed"}</a>
 					{/if}
 
 					{if $gContent->hasUserPermission( 'p_blogs_admin' )}
@@ -67,7 +67,7 @@
 			</div>
 
 			<h1>
-				{if $post_info.use_title eq 'y' && $post_info.title}
+				{if $post_info.use_title eq 'y' and $post_info.title}
 					{$post_info.title|escape|highlight}
 				{else}
 					{$post_info.publish_date|default:$post_info.created|bit_long_date}
@@ -80,7 +80,7 @@
 				{if count($post_info.blogs) > 0}
 					{tr}Posted to{/tr}&nbsp;
 					{foreach from=$post_info.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
-						<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
+						<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 and !$smarty.foreach.memberBlogLoop.last }, {/if}
 					{/foreach}
 				<br />
 				{/if}
@@ -97,7 +97,7 @@
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$post_info}
 
 			{* deal with the blog post image if there is one *}
-			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) && $post_info.thumbnail_url}
+			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) and $post_info.thumbnail_url}
 				<div class="image primary">
 					{jspopup notra=1 href=$post_info.thumbnail_url.original alt=$post_info.title|escape title=$post_info.title|escape img=$post_info.thumbnail_url.medium}
 				</div>
@@ -128,11 +128,11 @@
 
 	{if !empty($pages) and $pages > 1}
 		<div class="pagination">
-			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$first_page}">{biticon ipackage="icons" iname="go-first" iexplain="first page"}</a>
+			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$first_page}">{booticon ipackage="icons" iname="go-first" iexplain="first page"}</a>
 			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$prev_page}">{booticon iname="icon-arrow-left"  ipackage="icons"  iexplain="previous page"}</a>
 			{tr}page{/tr}:{$page}/{$pages}
-			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$next_page}">{biticon ipackage="icons" iname="go-next" iexplain="next page"}</a>
-			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$last_page}">{biticon ipackage="icons" iname="go-last" iexplain="last page"}</a>
+			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$next_page}">{booticon ipackage="icons" iname="go-next" iexplain="next page"}</a>
+			<a href="{$smarty.const.BLOGS_PKG_URL}view_post.php?blog_id={$smarty.request.blog_id}&amp;post_id={$smarty.request.post_id}&amp;page={$last_page}">{booticon ipackage="icons" iname="go-last" iexplain="last page"}</a>
 		</div>
 	{/if}
 

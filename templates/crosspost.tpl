@@ -37,7 +37,7 @@
 								{formlabel label="Include in Blogs" for="blog_id"}
 								{forminput}
 										{foreach from=$availableBlogs key=blogContentId item=availBlogTitle}
-											{if !$gContent->mInfo.blogs.$blogContentId || ($blogContentId == $crosspost.blog_content_id) }
+											{if !$gContent->mInfo.blogs.$blogContentId or ($blogContentId == $crosspost.blog_content_id) }
 												{assign var="has_crosspost_option" value=true}
 												<input name="blog_content_id[]" type="checkbox" option value="{$blogContentId}" {if $blogContentId == $crosspost.blog_content_id}checked="checked"{/if}>{$availBlogTitle|escape}</option><br/>
 											{/if}
@@ -108,7 +108,7 @@
 					{if count($post_info.blogs) > 0}
 						{tr}Posted to{/tr}
 						{foreach from=$post_info.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
-							<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
+							<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 and !$smarty.foreach.memberBlogLoop.last }, {/if}
 						{/foreach}
 					<br />
 					{/if}

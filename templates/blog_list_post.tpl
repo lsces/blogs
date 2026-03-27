@@ -36,7 +36,7 @@
 		<div class="date">
 			{if $gBitSystem->getConfig('blog_list_user_as') eq 'link'}
 				{tr}By{/tr} {displayname hash=$aPost}
-			{elseif $gBitSystem->getConfig('blog_list_user_as') eq 'avatar' && $aPost.avatar}
+			{elseif $gBitSystem->getConfig('blog_list_user_as') eq 'avatar' and $aPost.avatar}
 				<img src="{$aPost.avatar}" class="avatar" />
 			{else}
 				{tr}By{/tr} {displayname hash=$aPost nolink=true}
@@ -46,7 +46,7 @@
 			{if count($aPost.blogs) > 0}
 				{tr}Posted to{/tr}&nbsp;
 				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
-					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
+					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 and !$smarty.foreach.memberBlogLoop.last }, {/if}
 				{/foreach}
 				<br />
 			{/if}
@@ -62,7 +62,7 @@
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$aPost}
 			
 			{* deal with the blog post image if there is one *}
-			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) && $aPost.thumbnail_url}
+			{if $gBitSystem->isFeatureActive( 'blog_show_image' ) and $aPost.thumbnail_url}
 				<div class="image">
 					{jspopup notra=1 href=$aPost.thumbnail_url.original alt=$aPost.title|escape title=$aPost.title|escape img=$aPost.thumbnail_url.medium}
 				</div>
