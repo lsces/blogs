@@ -1,4 +1,11 @@
 <?php
+
+use Bitweaver\Blogs\BitBlog;
+use Bitweaver\KernelTools;
+use Bitweaver\Rss\FeedItem;
+use Bitweaver\Users\BitPermUser;
+use Bitweaver\Users\BitUser;
+use Bitweaver\Users\RoleUser;
 /**
  * @version $Header$
  * @package blogs
@@ -19,8 +26,8 @@ $gBitSystem->verifyFeature( 'blogs_rss' );
 require_once RSS_PKG_INCLUDE_PATH.'rss_inc.php';
 
 // default feed info
-$rss->title = $gBitSystem->getConfig( 'blogs_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'Blog Posts' ) );
-$rss->description = $gBitSystem->getConfig( 'blogs_rss_description', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'RSS Feed' ) );
+$rss->title = $gBitSystem->getConfig( 'blogs_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.KernelTools::tra( 'Blog Posts' ) );
+$rss->description = $gBitSystem->getConfig( 'blogs_rss_description', $gBitSystem->getConfig( 'site_title' ).' - '.KernelTools::tra( 'RSS Feed' ) );
 
 // check permission to view wiki pages
 if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
@@ -37,17 +44,17 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	$listHash['full_data'] = true;
 	if( !empty( $_REQUEST['user_id'] ) ) {
 		$blogUser = $gBitSystem->getConfig( 'user_class', 'BitPermUser' ) == 'RolePermUser' ? new RoleUser() : new BitUser();
-		}
 		
-		$userData = $blogUser->getUserInfo( array('user_id' => $_REQUEST['user_id']) );
+		$userData = $blogUser->getUserInfo( [ 'user_id' => $_REQUEST['user_id'] ] );
 		// dont try and fool me
 		if (!empty($userData)) {
 			$userName = $userData['real_name']?$userData['real_name']:$userData['login'];
 			$rss->title = $userName." at ".$gBitSystem->getConfig( 'site_title' );
 			$listHash['user_id'] = $_REQUEST['user_id'];
+		}
 	} else if( !empty( $_REQUEST['group_id'] ) ) {
 		require_once USERS_PKG_PATH . 'BitPermUser.php';
-		$permUser = new RolePermUser();
+		$permUser = new BitPermUser();
 		$groupData = $permUser->getGroupInfo( $_REQUEST['group_id'] );
 		// dont try and fool me
 		if (!empty($groupData)){
@@ -84,15 +91,16 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	// set the rss link
 	$rss->link = 'http://'.$_SERVER['HTTP_HOST'].BLOGS_PKG_URL.( !empty( $_REQUEST['blog_id'] ) ? "?blog_id=".$_REQUEST['blog_id'] : "" );
 	// get all the data ready for the feed creator
-	foreach( $feeds['data'] as $feed ) {
+	foreach( $feeds as $feed ) {
 		$item = new FeedItem();
 		$item->title = BitBlogPost::getTitleFromHash( $feed );
-		$item->link = BIT_BASE_URI.BitBlogPost::getDisplayUrlFromHash( null, $feed );
+		$item->link = BIT_BASE_URI.BitBlogPost::getDisplayUrlFromHash( $feed );
 		$item->description = $feed['parsed'];
 
 		$item->date = ( int )$feed['last_modified'];
-		$item->source = 'http://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
-		$item->author = $gBitUser->getDisplayName( false, $feed );
+		$item->source = 'https://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
+		$item->author = $feed['real_name'];
+		$item->authorEmail = $feed['email'];
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 50000 );
 		$item->descriptionHtmlSyndicated = true;
@@ -104,4 +112,3 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	// finally we are ready to serve the data
 	echo $rss->saveFeed( $rss_version_name, $cacheFile );
 }
-?>

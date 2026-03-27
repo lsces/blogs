@@ -15,14 +15,15 @@
  */
 require_once '../kernel/includes/setup_inc.php';
 
-include_once BLOGS_PKG_CLASS_PATH.'BitBlog.php';
+use Bitweaver\Blogs\BitBlog;
+use Bitweaver\KernelTools;
 
 if (!isset($_REQUEST["image_id"])) {
-	$gBitSmarty->assign('msg', tra("No image id given"));
-	$gBitSystem->display( 'error.tpl' , null, array( 'display_mode' => 'display' ));
+	$gBitSmarty->assign('msg', KernelTools::tra("No image id given"));
+	$gBitSystem->display( 'error.tpl' , null, [ 'display_mode' => 'display' ]);
 	die;
 }
 
-$imageInfo = $gBlog->getStoreFileInfo($_REQUEST["image_id"]);
+$imageInfo = BitBlog::getStoreFileInfo($_REQUEST["image_id"]);
 $gBitSmarty->assign( 'imageInfo' , $imageInfo );
-$gBitSystem->display( 'bitpackage:blogs/view_post_image.tpl' , null, array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:blogs/view_post_image.tpl' , null, [ 'display_mode' => 'display' ]);
