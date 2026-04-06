@@ -51,7 +51,7 @@ class BitBlogPost extends LibertyMime {
 			'handler_class' => 'BitBlogPost',
 			'handler_package' => 'blogs',
 			'handler_file' => 'BitBlogPost.php',
-			'maintainer_url' => 'http://www.bitweaver.org'
+			'maintainer_url' => 'https://www.bitweaver.org'
 		) );
 		$this->mPostId = (int)$pPostId;
 		$this->mContentId = (int)$pContentId;

@@ -38,7 +38,7 @@ class BitBlog extends LibertyMime {
 			'handler_class' => 'BitBlog',
 			'handler_package' => 'blogs',
 			'handler_file' => 'BitBlog.php',
-			'maintainer_url' => 'http://www.bitweaver.org'
+			'maintainer_url' => 'https://www.bitweaver.org'
 		] );
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITBLOG_CONTENT_TYPE_GUID;
