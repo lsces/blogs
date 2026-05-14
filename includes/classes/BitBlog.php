@@ -9,10 +9,10 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 use Bitweaver\BitBase;
 use Bitweaver\Liberty\LibertyContent;
 use Bitweaver\Liberty\LibertyMime;
-use Bitweaver\Users\RolePermUser;
 
 define( 'BITBLOG_CONTENT_TYPE_GUID', 'bitblog' );
 
@@ -30,7 +30,7 @@ class BitBlog extends LibertyMime {
 		} else {
 			$this->mBlogId = $this->verifyId( $pBlogId ) ? $pBlogId : 0;
 		}
-		
+
 		parent::__construct();
 		$this->registerContentType( BITBLOG_CONTENT_TYPE_GUID, [
 			'content_type_guid' => BITBLOG_CONTENT_TYPE_GUID,
@@ -38,7 +38,7 @@ class BitBlog extends LibertyMime {
 			'handler_class' => 'BitBlog',
 			'handler_package' => 'blogs',
 			'handler_file' => 'BitBlog.php',
-			'maintainer_url' => 'https://www.bitweaver.org'
+			'maintainer_url' => 'https://www.bitweaver.org',
 		] );
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITBLOG_CONTENT_TYPE_GUID;
@@ -102,7 +102,6 @@ class BitBlog extends LibertyMime {
 		}
 		return true;
 	}
-
 
 	/*shared*/
 	public function getBlog( $pBlogId, $pContentId = null ) {
@@ -176,7 +175,7 @@ class BitBlog extends LibertyMime {
 				//$pParamHash['blog_store']['posts'] = 0;
 				$pParamHash['blog_store']['content_id'] = $this->mContentId;
 					// if pParamHash['blog_id'] is set, someone is requesting a particular blog_id. Use with caution!
-					$pParamHash['blog_store']['blog_id'] = isset( $pParamHash['blog_id'] ) && is_numeric( $pParamHash['blog_id'] ) 
+					$pParamHash['blog_store']['blog_id'] = isset( $pParamHash['blog_id'] ) && is_numeric( $pParamHash['blog_id'] )
 						? $pParamHash['blog_id'] : $this->mDb->GenID( 'blogs_blog_id_seq' );
 
 				$this->mBlogId = $pParamHash['blog_store']['blog_id'];
@@ -276,7 +275,6 @@ class BitBlog extends LibertyMime {
 		if( !empty( $whereSql ) ) {
 			$whereSql = preg_replace( '/^[\s]*AND/', ' WHERE ', $whereSql );
 		}
-
 
 		$ret = [];
 
@@ -400,7 +398,7 @@ class BitBlog extends LibertyMime {
 	public function getAvailableContentStatuses( $pUserMinimum=-100, $pUserMaximum=100 ) {
 		global $gBitUser;
 		$ret = null;
-	 	// return null for all but admins
+		// return null for all but admins
 		if( $gBitUser->hasPermission( 'p_liberty_edit_all_status' )) {
 			$ret = LibertyMime::getAvailableContentStatuses();
 		}

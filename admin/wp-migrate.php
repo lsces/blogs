@@ -18,6 +18,7 @@
  */
 
 namespace Bitweaver\Blogs;
+
 require_once '../../kernel/includes/setup_inc.php';
 use Bitweaver\KernelTools;
 use Bitweaver\Liberty\LibertyComment;
@@ -43,7 +44,7 @@ if (isset($_REQUEST['wp_config'])) {
 	}
 	$gBitSmarty->assign('wp_config', $_REQUEST['wp_config']);
 }
-$gBitSystem->display("bitpackage:blogs/wp-migrate.tpl", KernelTools::tra("WordPress Migrate"), array( 'display_mode' => 'admin' ));
+$gBitSystem->display("bitpackage:blogs/wp-migrate.tpl", KernelTools::tra("WordPress Migrate"), [ 'display_mode' => 'admin' ]);
 die;
 
 function migrate_wp() {
@@ -73,12 +74,12 @@ function setup_migration() {
 	global $gBitSystem, $gUserMap, $gBlogMap, $gPostMap, $gCommentMap, $gMaxUser, $gMaxBlog, $gMaxPost, $gMaxComment;
 
 	if ($gBitSystem->getConfig('blogs_wp_migration', 'n') == 'n') {
-		$tables = array(
+		$tables = [
 			'blogs_wp_users' => "wp_id INT PRIMARY, user_id INT NOTNULL",
 			'blogs_wp_blogs' => "wp_id INT PRIMARY, blog_id INT NOTNULL",
 			'blogs_wp_posts' => "wp_id INT PRIMARY, post_id INT NOTNULL",
 			'blogs_wp_comments' => "wp_id INT PRIMARY, comment_id INT NOTNULL",
-			);
+			];
 		$gBitSystem->mDb->createTables($tables);
 		$gUserMap = [];
 		$gBlogMap = [];
@@ -155,9 +156,9 @@ function migrate_wp_users() {
 			if (empty($bu->mErrors)) {
 				//      vd($bu->mUserId);
 				$gUserMap[$data->ID] = $bu->mUserId;
-				$gBitSystem->mDb->query("UPDATE `".BIT_DB_PREFIX."users_users` SET hash = ? where user_id = ?", array($pParamHash['hash'], $bu->mUserId));
+				$gBitSystem->mDb->query("UPDATE `".BIT_DB_PREFIX."users_users` SET hash = ? where user_id = ?", [$pParamHash['hash'], $bu->mUserId]);
 			} else {
-				$gErrorMap[] = array('error' => "User ID: ".$pParamHash['login']." : ".implode(', ', $bu->mErrors));
+				$gErrorMap[] = ['error' => "User ID: ".$pParamHash['login']." : ".implode(', ', $bu->mErrors)];
 				//      vd($bu->mErrors);
 			}
 		}
@@ -167,7 +168,7 @@ function migrate_wp_users() {
 	$sql = "INSERT INTO `".BIT_DB_PREFIX."blogs_wp_users` (`wp_id`, `user_id`) VALUES (?, ?)";
 	foreach($gUserMap as $wp_id => $user_id) {
 		if ($wp_id > $gMaxUser) {
-			$gBitSystem->mDb->query($sql, array($wp_id, $user_id));
+			$gBitSystem->mDb->query($sql, [$wp_id, $user_id]);
 		}
 	}
 }
@@ -208,7 +209,7 @@ function migrate_wp_categories() {
 	$sql = "INSERT INTO `".BIT_DB_PREFIX."blogs_wp_blogs` (`wp_id`, `blog_id`) VALUES (?, ?)";
 	foreach($gBlogMap as $wp_id => $blog_id) {
 		if ($wp_id > $gMaxBlog) {
-			$gBitSystem->mDb->query($sql, array($wp_id, $blog_id));
+			$gBitSystem->mDb->query($sql, [$wp_id, $blog_id]);
 		}
 	}
 }
@@ -245,7 +246,7 @@ function migrate_wp_posts() {
 			if (empty($bp->mErrors)) {
 				$gPostMap[$post->ID] = $bp->mContentId;
 				$query = "UPDATE liberty_content SET created = ? WHERE content_id = ?";
-				$gBitSystem->mDb->query($query, array($pParamHash['publish_date'], $bp->mContentId));
+				$gBitSystem->mDb->query($query, [$pParamHash['publish_date'], $bp->mContentId]);
 			} else {
 				$pErrorMap[]['error'] = "Blog Post: " . $pParamHash['title'] . " had errors " . implode(", ", $bp->mErrors);
 			}
@@ -255,7 +256,7 @@ function migrate_wp_posts() {
 	$sql = "INSERT INTO `".BIT_DB_PREFIX."blogs_wp_posts` (`wp_id`, `post_id`) VALUES (?, ?)";
 	foreach($gPostMap as $wp_id => $post_id) {
 		if ($wp_id > $gMaxPost) {
-			$gBitSystem->mDb->query($sql, array($wp_id, $post_id));
+			$gBitSystem->mDb->query($sql, [$wp_id, $post_id]);
 		}
 	}
 }
@@ -330,7 +331,7 @@ function migrate_wp_comments() {
 			if (!empty($c->mContentId)) {
 				$gCommentMap[$comment->comment_ID] = $c->mContentId;
 				$query = "UPDATE liberty_content set IP = ?, created = ? WHERE content_id = ?";
-				$gBitSystem->mDb->query($query, array($comment->comment_author_IP, $pParamHash['last_modified'], $c->mContentId));
+				$gBitSystem->mDb->query($query, [$comment->comment_author_IP, $pParamHash['last_modified'], $c->mContentId]);
 			} else {
 				$gErrorMap[]['error'] = "Coment: Unable to store: " . $comment->comment_ID . " : " . implode(", ", $c->mErrors);
 			}
@@ -341,7 +342,7 @@ function migrate_wp_comments() {
 	$sql = "INSERT INTO `".BIT_DB_PREFIX."blogs_wp_comments` (`wp_id`, `comment_id`) VALUES (?, ?)";
 	foreach($gCommentMap as $wp_id => $comment_id) {
 		if ($wp_id > $gMaxComment) {
-			$gBitSystem->mDb->query($sql, array($wp_id, $comment_id));
+			$gBitSystem->mDb->query($sql, [$wp_id, $comment_id]);
 		}
 	}
 }

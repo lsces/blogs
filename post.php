@@ -14,15 +14,13 @@
  * required setup
  */
 namespace Bitweaver;
+
 require_once '../kernel/includes/setup_inc.php';
 use Bitweaver\Blogs\BitBlog;
-use Bitweaver\KernelTools;
 
 $gBitSystem->verifyPackage( 'blogs' );
 
-
 require_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
-
 
 if ( isset( $_REQUEST["blog_id"] ) && $_REQUEST["blog_id"] > 0 ) {
 	#setup so we know what the default target blog is in the template
@@ -35,7 +33,7 @@ if ( isset( $_REQUEST["blog_id"] ) && $_REQUEST["blog_id"] > 0 ) {
 } else {
 	$gBlog = new BitBlog();
 	$_REQUEST["blog_id"] = 0;
-}	 
+}
 
 //must be owner or admin to edit an existing post
 if( $gContent->isValid() ) {
@@ -43,7 +41,6 @@ if( $gContent->isValid() ) {
 } else {
 	$gContent->verifyCreatePermission();
 }
-
 
 // nuke post if requested
 if( !empty( $_REQUEST['action'] ) ) {
@@ -57,7 +54,7 @@ if( !empty( $_REQUEST['action'] ) ) {
 				$feedback['error'] = $gContent->mErrors;
 			}
 		}
-		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->getTitle() );		
+		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->getTitle() );
 		$formHash['remove'] = true;
 		$formHash['action'] = 'remove';
 		$formHash['post_id'] = $_REQUEST['post_id'];
@@ -76,7 +73,7 @@ if (isset($_REQUEST['remove_image'])) {
 }
 
 if( isset( $_REQUEST['format_guid'] ) && !isset( $gContent->mInfo['format_guid'] ) ) {
-	$formInfo['format_guid'] = $gContent->mInfo['format_guid'] = $_REQUEST['format_guid']; 
+	$formInfo['format_guid'] = $gContent->mInfo['format_guid'] = $_REQUEST['format_guid'];
 }
 
 if (isset($_REQUEST["preview"])) {
@@ -88,12 +85,12 @@ if (isset($_REQUEST["preview"])) {
 	 * this can eventually be removed with a change to the tpl to use post_info['parsed_data'] 
 	 * but requires clean up in a few places.
 	 */
-	$gBitSmarty->assign('parsed_data', $post['parsed_data']);	
+	$gBitSmarty->assign('parsed_data', $post['parsed_data']);
 } elseif (isset($_REQUEST['save_post']) || isset($_REQUEST['save_post_exit'])) {
 	// Editing page needs general ticket verification
 //	$gBitUser->verifyTicket();
 
-	// preserve a copy of the request data because if store fails we need to reprocess 
+	// preserve a copy of the request data because if store fails we need to reprocess
 	$requestCopy = $_REQUEST;
 
 	if( $gContent->store( $_REQUEST ) ) {
@@ -104,7 +101,7 @@ if (isset($_REQUEST["preview"])) {
 			header ("location: ".BLOGS_PKG_URL."view_post.php?post_id=$postid");
 			die;
 		}
-		
+
 		$parsed_data = $gContent->getParsedData();
 
 		$gBitSmarty->assign( 'title', $gContent->getTitle() );
@@ -114,7 +111,7 @@ if (isset($_REQUEST["preview"])) {
 		$post = $gContent->preparePreview( $requestCopy );
 		$gContent->invokeServices( 'content_preview_function' );
 		$gBitSmarty->assign( 'post_info', $post );
-		$gBitSmarty->assign('parsed_data', $post['parsed_data']);	
+		$gBitSmarty->assign('parsed_data', $post['parsed_data']);
 	}
 } elseif( !empty( $_REQUEST['edit'] ) ) {
 } else {
@@ -124,7 +121,7 @@ if (isset($_REQUEST["preview"])) {
 		 * then we automatically move the publish date up to NOW to help users from publishing in the past.
 		 * if they set it backward and preview or save the back date will be preserved.
 		 */
-		$gContent->mInfo['publish_date'] = $gBitSystem->getUTCTime(); 
+		$gContent->mInfo['publish_date'] = $gBitSystem->getUTCTime();
 	}
 	$gBitSmarty->assign('post_info', $gContent->mInfo);
 }

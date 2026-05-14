@@ -13,11 +13,12 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 require_once '../kernel/includes/setup_inc.php';
 use Bitweaver\KernelTools;
 
 $gBitSystem->verifyPackage( 'blogs' );
-$gBitSystem->verifyPermission( 'p_blogs_admin' ); 
+$gBitSystem->verifyPermission( 'p_blogs_admin' );
 
 require_once BLOGS_PKG_INCLUDE_PATH.'lookup_post_inc.php';
 
@@ -27,7 +28,7 @@ $gBitUser->verifyTicket();
 
 //if crosspost save store it and send us to the post's page
 if( isset( $_REQUEST['crosspost_post']) || isset($_REQUEST['save_post_exit'] ) ) {
-	$crosspost_note = isset( $_REQUEST['crosspost_note'] )? $_REQUEST['crosspost_note']:null;
+	$crosspost_note = $_REQUEST['crosspost_note']??null;
 	if( $gContent->isValid() && $gContent->storePostMap( $gContent->mInfo, $_REQUEST['blog_content_id'], $crosspost_note ) ) {
 		$gContent->load();
 		KernelTools::bit_redirect( $gContent->getDisplayUrl() );
@@ -39,7 +40,7 @@ if( !empty( $_REQUEST['action']) && ($_REQUEST['action'] == 'remove') && $gConte
 	// confirm first
 	if( isset( $_REQUEST["confirm"] ) ) {
 		//remove it, then relaod the crossposting form
-		if ( $gContent->expungePostMap( $gContent->mInfo['content_id'], array( $_REQUEST["blog_content_id"] ) ) ){
+		if ( $gContent->expungePostMap( $gContent->mInfo['content_id'], [ $_REQUEST["blog_content_id"] ] ) ){
 			$gContent->load();
 		}else{
 			$feedback['error'] = $gContent->mErrors;
@@ -50,12 +51,12 @@ if( !empty( $_REQUEST['action']) && ($_REQUEST['action'] == 'remove') && $gConte
 		$formHash['action'] = 'remove';
 		$formHash['post_id'] = $_REQUEST['post_id'];
 		$formHash['blog_content_id'] = $_REQUEST['blog_content_id'];
-		$msgHash = array(
+		$msgHash = [
 			'label' => 'Remove Crossposting of Blog Post:',
 			'confirm_item' => $gContent->getTitle(),
 			'warning' => KernelTools::tra('This will remove the crossposting of the above blog post.'), // from the blog \''.'addblognamehere'.'\'),
 			'error' => KernelTools::tra('This cannot be undone!'),
-		);
+		];
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	}
 }elseif( isset( $_REQUEST["blog_content_id"] )){
@@ -88,4 +89,4 @@ $gBitSmarty->assign( 'availableBlogs', $availableBlogs );
 
 $gBitSmarty->assign('blogs', $blogs['data']);
 
-$gBitSystem->display( 'bitpackage:blogs/crosspost.tpl', KernelTools::tra("Crosspost Blog Post") , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:blogs/crosspost.tpl', KernelTools::tra("Crosspost Blog Post") , [ 'display_mode' => 'display' ]);

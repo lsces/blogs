@@ -33,11 +33,11 @@ if( $gContent->isValid() && isset($_REQUEST["remove"])) {
 	} elseif( empty( $_REQUEST['confirm'] ) ) {
 		$formHash['remove'] = $_REQUEST["remove"];
 		$formHash['blog_id'] = $gContent->mBlogId;
-		$gBitSystem->confirmDialog( $formHash, 
-			array(
-				'warning' => KernelTools::tra('Are you sure you want to delete this blog?') . ' ' . $gContent->getTitle(), 
+		$gBitSystem->confirmDialog( $formHash,
+			[
+				'warning' => KernelTools::tra('Are you sure you want to delete this blog?') . ' ' . $gContent->getTitle(),
 				'error' => KernelTools::tra('This cannot be undone!'),
-			)
+			],
 		);
 	} else {
 		$gContent->expunge();
@@ -53,4 +53,4 @@ if( defined(ROLE_MODEL) ) {
 	$gBitSmarty->assign( 'role_model', true );
 }
 // Display the template
-$gBitSystem->display( 'bitpackage:blogs/list_blogs.tpl', null, array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:blogs/list_blogs.tpl', null, [ 'display_mode' => 'list' ]);

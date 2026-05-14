@@ -24,6 +24,7 @@
  * definitions
  */
 namespace Bitweaver\Liberty;
+
 use Bitweaver\Users\RoleUser;
 use Bitweaver\Blogs\BitBlogPost;
 use Bitweaver\KernelTools;
@@ -43,7 +44,7 @@ $pluginParams = [
 	'help_page' => 'DataPluginBlog',
 	'description' => KernelTools::tra( "This plugin will display several posts from a blog." ),
 	'syntax' => "{BLOG id= user= max= format= }",
-	'plugin_type' => DATA_PLUGIN
+	'plugin_type' => DATA_PLUGIN,
 ];
 $gLibertySystem->registerPlugin( PLUGIN_GUID_DATABLOG, $pluginParams );
 $gLibertySystem->registerDataTag( $pluginParams['tag'], PLUGIN_GUID_DATABLOG );
@@ -91,18 +92,18 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 	if ($gBitSystem->isPackageActive('blogs') && $gBitUser->hasPermission( 'p_blogs_view')) {
 	// The next 2 lines allow access to the $pluginParams given above and may be removed when no longer needed
 		$pluginParams = $gLibertySystem->mPlugins[PLUGIN_GUID_DATABLOG];
-		
+
 		require_once BLOGS_PKG_CLASS_PATH.'BitBlog.php';
 		require_once LIBERTY_PKG_INCLUDE_PATH.'lookup_content_inc.php';
-		
+
 		$module_params = $params;
-		
+
 		if (isset($module_params['id'])) {
 			$gBitSmarty->assign('blog_id', $module_params['id']);
 		}
-		
+
 		$blogPost = new BitBlogPost();
-		
+
 		$sortOptions = [
 						 "publish_date_desc",
 						 "publish_date_asc",
@@ -115,14 +116,14 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		$sort_mode = !empty( $module_params['sort_mode'] ) && in_array( $module_params['sort_mode'], $sortOptions )
 		 ? $module_params['sort_mode']
 		 : 'publish_date_desc';
-		
+
 		$getHash = [];
-		
+
 		if ( isset($module_params['user']) ){ $getHash['user'] = $module_params['user']; }
 		if ( isset($module_params['id']) ){ $getHash['blog_id'] = $module_params['id'];}
 		if ( isset($module_params['group_id']) ){ $getHash['group_id'] = $module_params['group_id'];}
 		if ( isset($module_params['role_id']) ){ $getHash['role_id'] = $module_params['role_id'];}
-		
+
 		// handle draft posts
 		$getHash['enforce_status'] = true;
 		// @TODO enable lists that include draft posts
@@ -131,7 +132,7 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		// if the object reference problem in the above mentions tpl is patched then use this if to enable drafts
 		// if ( !empty( $module_params['status'] ) && $module_params['status'] = "draft" && isset( $gBitUser->mUserId ) ){
 		if ( false ) {
-			// if we are getting drafts then get future posts too 
+			// if we are getting drafts then get future posts too
 			$getHash['show_future'] = true;
 			$getHash['min_status_id'] = -6;
 			$getHash['max_status_id'] = -4;
@@ -149,12 +150,12 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 		$getHash['page'] = !empty($module_params['page']) ? $module_params['page'] : 1;
 		$getHash['offset'] = !empty($module_params['offset']) ? $module_params['offset'] : 0;
 		$blogPosts = $blogPost->getList( $getHash );
-		
+
 		$display_format = empty($module_params['format']) ? 'simple_title_list' : $module_params['format'];
-		
+
 		switch( $display_format ) {
 			case 'full':
-				$display_result = '<div class="blogs">';				
+				$display_result = '<div class="blogs">';
 				if ( $gBitSystem->isPackageActive( 'rss' ) ){
 					if ( isset($module_params['user']) ){
 						$rssUser = new RoleUser();
@@ -175,7 +176,7 @@ function data_blog($data, $params) { // No change in the parameters with Clyde
 				}
 
 				$gBitSmarty->assign( 'showDescriptionsOnly', true );
-				
+
 				foreach( $blogPosts['data'] as $aPost ) {
 					$gBitSmarty->assign('aPost', $aPost);
 					$display_result .= $gBitSmarty->fetch( 'bitpackage:blogs/blog_list_post.tpl' );

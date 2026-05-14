@@ -1,5 +1,4 @@
 <?php
-use Bitweaver\Blogs\BitBlogPost;
 use Bitweaver\KernelTools;
 
 /**
@@ -59,7 +58,6 @@ if ($gBitSystem->isFeatureActive( 'blog_posts_comments' )) {
 	$commentsParentId = $gContent->mContentId;
 	include_once LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php';
 }
-
 
 $gBitSystem->setBrowserTitle( $gContent->mInfo['title'] );
 // Display the template

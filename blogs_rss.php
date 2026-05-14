@@ -44,7 +44,7 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	$listHash['full_data'] = true;
 	if( !empty( $_REQUEST['user_id'] ) ) {
 		$blogUser = $gBitSystem->getConfig( 'user_class', 'BitPermUser' ) == 'RolePermUser' ? new RoleUser() : new BitUser();
-		
+
 		$userData = $blogUser->getUserInfo( [ 'user_id' => $_REQUEST['user_id'] ] );
 		// dont try and fool me
 		if (!empty($userData)) {

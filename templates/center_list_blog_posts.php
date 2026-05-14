@@ -17,8 +17,8 @@ if( empty( $gContent )) {
 
 if( $gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin() ) {
 	$futuresHash = [];
-    $futuresHash['max_records'] = !empty( $_REQUEST['max_records'] ) ? $_REQUEST['max_records'] : $gBitSystem->getConfig( 'blog_posts_max_list' );
-    $futuresHash['get_future'] = true;
+	$futuresHash['max_records'] = !empty( $_REQUEST['max_records'] ) ? $_REQUEST['max_records'] : $gBitSystem->getConfig( 'blog_posts_max_list' );
+	$futuresHash['get_future'] = true;
 	if( empty( $futuresHash['user_id'] )) {
 		if( !empty( $gQueryUserId )) {
 			$futuresHash['user_id'] = $gQueryUserId;
@@ -29,10 +29,10 @@ if( $gBitUser->hasPermission( 'p_blog_posts_read_future' ) || $gBitUser->isAdmin
 	// prevent anything lower than publicly visible be displayed in blog roll
 	$futuresHash['enforce_status'] = true;
 	$futuresHash['min_owner_status_id'] = 0;
-    $futures = $blogPost->getFutureList( $futuresHash );
-    $gBitSmarty->assign( 'futures', $futures['data'] ?? []);
+	$futures = $blogPost->getFutureList( $futuresHash );
+	$gBitSmarty->assign( 'futures', $futures['data'] ?? []);
 } else {
-    $_REQUEST['max_records'] = $gBitSystem->getConfig( 'blog_posts_max_list' );
+	$_REQUEST['max_records'] = $gBitSystem->getConfig( 'blog_posts_max_list' );
 }
 
 // various options might be set in module_params
@@ -52,7 +52,7 @@ if( !empty( $moduleParams->values )) {
 	//$listHash['parse_data'] = true;
 	//$listHash['load_comments'] = true;
 } else {
-    $listHash = $_REQUEST;
+	$listHash = $_REQUEST;
 }
 
 RoleUser::userCollection( $_REQUEST, $listHash );
@@ -64,7 +64,6 @@ if ( empty( $listHash['sort_mode'] ) ){
 if( !$gBitUser->hasPermission( 'p_blogs_admin' )) {
 	$listHash['content_perm_name'] = 'p_blogs_view';
 }
-
 
 $paginationPath = BLOGS_PKG_URL.'index.php';
 

@@ -20,7 +20,7 @@ RoleUser::userCollection( $moduleParams->value['module_params'] ?? null, $listHa
 $blog = new BitBlog();
 if( $modBlogs = $blog->getList( $listHash ) ) {
 	foreach( array_keys( $modBlogs ) as $b ) {
-        $modBlogs[$b]['post'] = $blog->getPost( [ 'blog_id' => $modBlogs[$b]['blog_id'] ] );
+		$modBlogs[$b]['post'] = $blog->getPost( [ 'blog_id' => $modBlogs[$b]['blog_id'] ] );
 	}
 	$gBitSmarty->assign( 'modBlogs', $modBlogs );
 }

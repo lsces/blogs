@@ -63,12 +63,12 @@ $gBitInstaller->registerSchemaIndexes( BLOGS_PKG_NAME, $indices );
 // ### Sequences
 $sequences = [
 	'blogs_blog_id_seq'      => [ 'start' => 1 ],
-	'blog_posts_post_id_seq' => [ 'start' => 1 ]
+	'blog_posts_post_id_seq' => [ 'start' => 1 ],
 ];
 $gBitInstaller->registerSchemaSequences( BLOGS_PKG_NAME, $sequences );
 
 // ### Default UserPermissions
-$gBitInstaller->registerUserPermissions( BLOGS_PKG_NAME, [ 
+$gBitInstaller->registerUserPermissions( BLOGS_PKG_NAME, [
 	[ 'p_blogs_create', 'Can create a blog', 'registered', BLOGS_PKG_NAME ],
 	[ 'p_blogs_create_is_public', 'Can create a public blog', 'editors', BLOGS_PKG_NAME ],
 	[ 'p_blogs_post', 'Can create a blog post', 'registered', BLOGS_PKG_NAME ],
@@ -77,7 +77,7 @@ $gBitInstaller->registerUserPermissions( BLOGS_PKG_NAME, [
 	[ 'p_blogs_admin', 'Can admin blogs', 'editors', BLOGS_PKG_NAME ],
 	[ 'p_blogs_view', 'Can read blogs', 'basic', BLOGS_PKG_NAME ],
 	[ 'p_blog_posts_read_future', 'Can view future dated posts', 'editors', BLOGS_PKG_NAME ],
-	[ 'p_blog_posts_read_expired', 'Can view expired posts', 'editors', BLOGS_PKG_NAME ]
+	[ 'p_blog_posts_read_expired', 'Can view expired posts', 'editors', BLOGS_PKG_NAME ],
 ] );
 
 // ### Default Preferences
@@ -115,7 +115,7 @@ $gBitInstaller->registerPreferences( BLOGS_PKG_NAME, [
  **/
 
 if(defined('RSS_PKG_NAME')) {
-	$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, [ 
+	$gBitInstaller->registerPreferences( BLOGS_PKG_NAME, [
 		[ RSS_PKG_NAME, BLOGS_PKG_NAME.'_rss', 'y' ],
 	]);
 }
@@ -123,11 +123,11 @@ if(defined('RSS_PKG_NAME')) {
 // ### Register content types
 $gBitInstaller->registerContentObjects( BLOGS_PKG_NAME, [
 	'BitBlog'=>BLOGS_PKG_CLASS_PATH.'BitBlog.php',
-	'BitBlogPost'=>BLOGS_PKG_CLASS_PATH.'BitBlogPost.php'
+	'BitBlogPost'=>BLOGS_PKG_CLASS_PATH.'BitBlogPost.php',
 ] );
 
 // Requirements
-$gBitInstaller->registerRequirements( BLOGS_PKG_NAME, [ 
+$gBitInstaller->registerRequirements( BLOGS_PKG_NAME, [
 	'liberty' => [ 'min' => '5.0.0' ],
 ] );
 

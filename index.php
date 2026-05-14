@@ -2,11 +2,12 @@
 /**
  * @version $Header$
  */
- 
+
 /**
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 use Bitweaver\BitBase;
 
 require_once '../kernel/includes/setup_inc.php';

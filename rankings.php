@@ -14,6 +14,7 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 require_once '../kernel/includes/setup_inc.php';
 use Bitweaver\KernelTools;
 use BitWeaver\Liberty\LibertyContent;
@@ -25,15 +26,15 @@ $gBitSystem->verifyPermission( 'p_blogs_view' );
 $rankingOptions = [
 	[
 		'output' => KernelTools::tra( 'Most Often Viewed' ),
-		'value' => 'hits_desc'
+		'value' => 'hits_desc',
 	],
 	[
 		'output' => KernelTools::tra( 'Most Recently Modified' ),
-		'value' => 'last_modified_desc'
+		'value' => 'last_modified_desc',
 	],
 	[
 		'output' => KernelTools::tra( 'Most Active Authors' ),
-		'value' => 'top_authors'
+		'value' => 'top_authors',
 	],
 ];
 $gBitSmarty->assign( 'rankingOptions', $rankingOptions );
@@ -68,10 +69,7 @@ if( empty( $gContent ) ) {
 $rankList = $gContent->getContentRanking( $_REQUEST );
 $gBitSmarty->assign( 'rankList', $rankList );
 
-$gBitSystem->display( 'bitpackage:liberty/rankings.tpl', KernelTools::tra( "Blog Post Rankings" ) , array( 'display_mode' => 'display' ));
-
-
-
+$gBitSystem->display( 'bitpackage:liberty/rankings.tpl', KernelTools::tra( "Blog Post Rankings" ) , [ 'display_mode' => 'display' ]);
 
 /* ---- below is what blog rankings was - might want to canabalize some of it eventually ---- */
 /*
@@ -161,7 +159,7 @@ function blog_ranking_top_blogs($limit) {
 }
 
 /** TODO: This should be changed when we start using activity in the blog.
-          We should check TW 1.9 for code for that field in the blog. */
+		  We should check TW 1.9 for code for that field in the blog. */
 /*
 function blog_ranking_top_active_blogs($limit) {
 	global $gBitSystem;
@@ -201,12 +199,12 @@ function blog_ranking_last_posts($limit) {
 	  $list['data'] = [];
 	  // Reorganize blogs by id
 	  foreach($blogs['data'] as $key => $blog) {
-	    $list['data'][$blog['blog_id']] = $blog;
+		$list['data'][$blog['blog_id']] = $blog;
 	  }
 	  // And merge in posts
 	  foreach($posts['data'] as $key => $post) {
-	    $post['post_url'] = $bp->getDisplayUrl($post['content_id']);
-	    $list['data'][$post['blog_id']]['post_array'][] = $post;
+		$post['post_url'] = $bp->getDisplayUrl($post['content_id']);
+		$list['data'][$post['blog_id']]['post_array'][] = $post;
 	  }
 	}
 	$list['title'] = 'Last Posts';

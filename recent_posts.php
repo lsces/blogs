@@ -5,7 +5,7 @@
  * @package blogs
  * @subpackage functions
  */
- 
+
 /**
  * Initial Setup
  */

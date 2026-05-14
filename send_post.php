@@ -79,7 +79,7 @@ if (isset($_REQUEST['send'])) {
 		$gBitSmarty->assign('mail_machine', $machine);
 		$mail_data = $gBitSmarty->fetch('bitpackage:blogs/blogs_send_link.tpl');
 		@mail($email, KernelTools::tra('Post recommendation at'). ' ' . $_SERVER["SERVER_NAME"], $mail_data,
-			"From: ".$gBitSystem->getConfig( 'site_sender_email' )."\r\nContent-type: text/plain;charset=utf-8\r\n");
+			"From: ".$gBitSystem->getConfig( 'site_sender_email' )."\r\nContent-type: text/plain;charset=utf-8\r\n", );
 	}
 
 	$gBitSmarty->assign('sent', 'y');
@@ -87,4 +87,4 @@ if (isset($_REQUEST['send'])) {
 $gBitSystem->setBrowserTitle("Send Blog Post: ".$gContent->mInfo['title']);
 
 // Display the template
-$gBitSystem->display( 'bitpackage:blogs/send_blog_post.tpl', null, array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:blogs/send_blog_post.tpl', null, [ 'display_mode' => 'display' ]);

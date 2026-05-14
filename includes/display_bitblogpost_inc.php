@@ -7,7 +7,6 @@
 /**
  * required setup
  */
-use Bitweaver\Blogs\BitBlog;
 use Bitweaver\KernelTools;
 use \Bitweaver\Liberty\LibertyContent;
 
@@ -25,10 +24,10 @@ if (!isset($gContent->mPostId)) {
 
 	if (isset($_REQUEST['url'])) {
 		// Add a trackback ping to the list of trackback_from
-		$title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
+		$title = $_REQUEST['title'] ?? '';
 
-		$excerpt = isset($_REQUEST['excerpt']) ? $_REQUEST['excerpt'] : '';
-		$blog_name = isset($_REQUEST['blog_name']) ? $_REQUEST['blog_name'] : '';
+		$excerpt = $_REQUEST['excerpt'] ?? '';
+		$blog_name = $_REQUEST['blog_name'] ?? '';
 
 		if ($gContent->addTrackbackFrom( $_REQUEST['url'], $title, $excerpt, $blog_name ) ) {
 			print '<?xml version="1.0" encoding="iso-8859-1"?>';
@@ -78,14 +77,14 @@ if ( empty( $_REQUEST['format'] ) || $_REQUEST['format'] == "full" || $_REQUEST[
 } else {
 	// if the format requested is not the full post or the readmore data we default to just the first half of the post
 	$parseHash['data'] = preg_replace( LIBERTY_SPLIT_REGEX, "", ( $_REQUEST['format'] != "more" )?$gContent->mInfo['raw']:$gContent->mInfo['raw_more']);
-	$parsed_data = LibertyContent::parseDataHash( $parseHash, $gContent );	
+	$parsed_data = LibertyContent::parseDataHash( $parseHash, $gContent );
 }
 
 $gBitSmarty->assign('parsed_data', $parsed_data);
 $gBitSmarty->assign('post_info', $gContent->mInfo );
 
 // Display the template
-if ( isset( $_REQUEST['output'] ) && $_REQUEST['output']="ajax"){	
+if ( isset( $_REQUEST['output'] ) && $_REQUEST['output']="ajax"){
 	$gBitSystem->display( 'bitpackage:blogs/view_blog_post_xml.tpl', null, [ 'format' => 'center_only', 'display_mode' => 'display' ] );
 }else{
 	$gBitSystem->display( 'bitpackage:blogs/view_blog_post.tpl' , null, [ 'display_mode' => 'display' ] );

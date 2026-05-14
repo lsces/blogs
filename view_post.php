@@ -14,7 +14,6 @@
  * required setup
  */
 require_once '../kernel/includes/setup_inc.php';
-use Bitweaver\Blogs\BitBlogPost;
 
 $gBitSystem->verifyPackage( 'blogs' );
 

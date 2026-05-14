@@ -21,6 +21,7 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 use Bitweaver\BitBase;
 use Bitweaver\KernelTools;
 use Bitweaver\BitDate;
@@ -45,14 +46,14 @@ class BitBlogPost extends LibertyMime {
 
 	public function __construct( $pPostId=null, $pContentId=null ) {
 		parent::__construct();
-		$this->registerContentType( BITBLOGPOST_CONTENT_TYPE_GUID, array(
+		$this->registerContentType( BITBLOGPOST_CONTENT_TYPE_GUID, [
 			'content_type_guid' => BITBLOGPOST_CONTENT_TYPE_GUID,
 			'content_name' => 'Blog Post',
 			'handler_class' => 'BitBlogPost',
 			'handler_package' => 'blogs',
 			'handler_file' => 'BitBlogPost.php',
-			'maintainer_url' => 'https://www.bitweaver.org'
-		) );
+			'maintainer_url' => 'https://www.bitweaver.org',
+		] );
 		$this->mPostId = (int)$pPostId;
 		$this->mContentId = (int)$pContentId;
 		$this->mContentTypeGuid = BITBLOGPOST_CONTENT_TYPE_GUID;
@@ -103,11 +104,11 @@ class BitBlogPost extends LibertyMime {
 				// we should remove this now that display_url is added
 				$this->mInfo['url'] = BitBlogPost::getDisplayUrlFromHash( $this->mInfo );
 				$this->mInfo['display_url'] = BitBlogPost::getDisplayUrlFromHash( $this->mInfo );
-				foreach( array( 'avatar', 'image' ) as $img ) {
+				foreach( [ 'avatar', 'image' ] as $img ) {
 					if( !empty( $this->mInfo[$img.'_file_name'] ) ) {
-						$this->mInfo[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( array(
-							'source_file' => $this->getSourceFile( array( 'user_id'=>$this->getField( 'user_id' ), 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( array( 'mime_type' => $this->getField( $img.'_mime_type' ), 'name' =>  $this->getField( $img.'_file_name' ) ) ), 'file_name' => basename( $this->mInfo[$img.'_file_name'] ?? '' ), 'sub_dir' =>  $this->getField( $img.'_attachment_id' ) ) )
-						));
+						$this->mInfo[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( [
+							'source_file' => $this->getSourceFile( [ 'user_id'=>$this->getField( 'user_id' ), 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( [ 'mime_type' => $this->getField( $img.'_mime_type' ), 'name' =>  $this->getField( $img.'_file_name' ) ] ), 'file_name' => basename( $this->mInfo[$img.'_file_name'] ?? '' ), 'sub_dir' =>  $this->getField( $img.'_attachment_id' ) ] ),
+						]);
 					}
 				}
 
@@ -117,12 +118,12 @@ class BitBlogPost extends LibertyMime {
 					$format = $this->mInfo['format_guid'];
 					$linebreak = $gLibertySystem->mPlugins[$format]['linebreak'];
 
-					$parts = preg_match( "/\.[3]split\.[3](".preg_quote( $linebreak, "/" ).")[2]/i", $this->mInfo['raw'] ) 
-							? preg_split( "/\.[3]split\.[3](".preg_quote( $linebreak, "/" ).")[2]/i", $this->mInfo['raw'] ) 
+					$parts = preg_match( "/\.[3]split\.[3](".preg_quote( $linebreak, "/" ).")[2]/i", $this->mInfo['raw'] )
+							? preg_split( "/\.[3]split\.[3](".preg_quote( $linebreak, "/" ).")[2]/i", $this->mInfo['raw'] )
 							: preg_split( "/\.[3]split\.[3]/i", $this->mInfo['raw'] );
-				
-					$this->mInfo['raw'] = isset( $parts[0] )? $parts[0] : $this->mInfo['raw'];
-					$this->mInfo['raw_more'] = isset( $parts[1] )? $parts[1] : null ;
+
+					$this->mInfo['raw'] = $parts[0] ?? $this->mInfo['raw'];
+					$this->mInfo['raw_more'] = $parts[1] ?? null ;
 				}
 
 				$this->mInfo['data'] = preg_replace( LIBERTY_SPLIT_REGEX, "", $this->mInfo['data'] );
@@ -190,7 +191,7 @@ class BitBlogPost extends LibertyMime {
 		global $gBitSystem;
 		$ret = null;
 		if( @$this->verifyId( $pPostContentId ) ) {
-			$bindVars = array( (int)$pPostContentId );
+			$bindVars = [ (int)$pPostContentId ];
 			$query = "SELECT b.`content_id` AS hash_key, bpm.*, b.*, lc.*
 				FROM `".BIT_DB_PREFIX."blogs_posts_map` bpm
 				INNER JOIN		`".BIT_DB_PREFIX."blogs`				 b ON b.`content_id` = bpm.`blog_content_id`
@@ -218,10 +219,10 @@ class BitBlogPost extends LibertyMime {
 		global $gBitSystem, $gThumbSizes;
 		$ret = null;
 		if( !empty( $pParamHash['image_file_name'] )) {
-			$thumbHash = array(
+			$thumbHash = [
 				'mime_image'   => false,
-				'source_file' => $pParamHash['image_file_name']
-			);
+				'source_file' => $pParamHash['image_file_name'],
+			];
 			$ret = \Bitweaver\Liberty\liberty_fetch_thumbnails( $thumbHash );
 			$ret['original'] = BIT_ROOT_URL.$pParamHash['image_file_name'];
 		}
@@ -281,8 +282,6 @@ class BitBlogPost extends LibertyMime {
 		return $data;
 	}
 
-
-
 	/**
 	* Make sure the data is safe to store
 	* @param array pParamHash be sure to pass by reference in case we need to make modifcations to the hash
@@ -337,10 +336,10 @@ class BitBlogPost extends LibertyMime {
 			$dateString = $this->mDate->gmmktime(
 				$pParamHash['publish_Hour'],
 				$pParamHash['publish_Minute'],
-				isset($pParamHash['publish_Second']) ? $pParamHash['publish_Second'] : 0,
+				$pParamHash['publish_Second'] ?? 0,
 				$pParamHash['publish_Month'],
 				$pParamHash['publish_Day'],
-				$pParamHash['publish_Year']
+				$pParamHash['publish_Year'],
 			);
 
 			$timestamp = $this->mDate->getUTCFromDisplayDate( $dateString );
@@ -363,10 +362,10 @@ class BitBlogPost extends LibertyMime {
 			$dateString = $this->mDate->gmmktime(
 				$pParamHash['expire_Hour'],
 				$pParamHash['expire_Minute'],
-				isset($pParamHash['expire_Second']) ? $pParamHash['expire_Second'] : 0,
+				$pParamHash['expire_Second'] ?? 0,
 				$pParamHash['expire_Month'],
 				$pParamHash['expire_Day'],
-				$pParamHash['expire_Year']
+				$pParamHash['expire_Year'],
 			);
 
 			$timestamp = $this->mDate->getUTCFromDisplayDate( $dateString );
@@ -397,7 +396,7 @@ class BitBlogPost extends LibertyMime {
 	/**
 	 * Check if the current user is the blog owner
 	 */
- 	public function isBlogOwner( $pUserId=null ) {
+	public function isBlogOwner( $pUserId=null ) {
 		$ret = false;
 		global $gBitUser;
 		if( empty( $pUserId ) && $gBitUser->isValid() ) {
@@ -408,7 +407,6 @@ class BitBlogPost extends LibertyMime {
 		}
 		return $ret;
 	}
-
 
 	/**
 	 * Check if the current post can have comments attached to it
@@ -504,12 +502,11 @@ class BitBlogPost extends LibertyMime {
 		return count( $this->mErrors ) == 0;
 	}
 
-
 	public function loadPostMap( $pPostContentId, $pBlogContentId){
 		$ret = null;
 		if( BitBase::verifyId( $pPostContentId ) ){
 			$this->StartTrans();
-			$result = $this->mDb->getRow( "SELECT * FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `post_content_id`=? AND `blog_content_id`=?", array( $pPostContentId, $pBlogContentId ) );
+			$result = $this->mDb->getRow( "SELECT * FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `post_content_id`=? AND `blog_content_id`=?", [ $pPostContentId, $pBlogContentId ] );
 			$this->CompleteTrans();
 			if ( !empty( $result ) ){
 				$ret = $result;
@@ -542,11 +539,11 @@ class BitBlogPost extends LibertyMime {
 				}elseif ( is_array( $pBlogMixed ) ) {
 					$blogIds = $pBlogMixed;
 				}elseif ( is_numeric( $pBlogMixed ) ) {
-					$blogIds = array( $pBlogMixed );
+					$blogIds = [ $pBlogMixed ];
 				}
 			}
 			$currentMappings = [];
-			if( $allMappings = $this->mDb->getCol( "SELECT `blog_content_id` FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `post_content_id`=?", array( $postContentId ) ) ) {
+			if( $allMappings = $this->mDb->getCol( "SELECT `blog_content_id` FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `post_content_id`=?", [ $postContentId ] ) ) {
 				// whiddle down all mappings to just those we have perm to
 				foreach( $allMappings as $blogContentId ) {
 					if( $this->checkContentPermission( [ 'user_id' => $gBitUser->mUserId, 'perm_name'=>'p_blogs_post', 'content_id'=>$blogContentId ] ) ) {
@@ -558,13 +555,13 @@ class BitBlogPost extends LibertyMime {
 			// Add new mappings for this post
 			$newBlogIds = array_diff( $blogIds, $currentMappings );
 			foreach( $newBlogIds as $blogContentId ) {
-				if( $this->verifyId( $blogContentId ) && $this->checkContentPermission( array( 'user_id' => $gBitUser->mUserId, 'perm_name'=>'p_blogs_post', 'content_id'=>$blogContentId ) ) ) {
-					$result = $this->mDb->associateInsert( BIT_DB_PREFIX."blogs_posts_map", array(
+				if( $this->verifyId( $blogContentId ) && $this->checkContentPermission( [ 'user_id' => $gBitUser->mUserId, 'perm_name'=>'p_blogs_post', 'content_id'=>$blogContentId ] ) ) {
+					$result = $this->mDb->associateInsert( BIT_DB_PREFIX."blogs_posts_map", [
 						'post_content_id' => $postContentId,
 						'blog_content_id' => (int)$blogContentId,
 						'date_added' => $timeStamp,
 						'crosspost_note' => $pCrosspostNote,
-					));
+					]);
 				}
 			}
 
@@ -576,13 +573,13 @@ class BitBlogPost extends LibertyMime {
 				// Update existing mappings
 				$updateBlogIds = array_intersect( $blogIds, $currentMappings );
 				foreach( $updateBlogIds as $blogContentId ) {
-					if( $this->verifyId( $blogContentId ) && $this->checkContentPermission( array( 'user_id' => $gBitUser->mUserId, 'perm_name'=>'p_blogs_post', 'content_id'=>$blogContentId ) ) ) {
-						$result = $this->mDb->associateUpdate( BIT_DB_PREFIX."blogs_posts_map", array(
+					if( $this->verifyId( $blogContentId ) && $this->checkContentPermission( [ 'user_id' => $gBitUser->mUserId, 'perm_name'=>'p_blogs_post', 'content_id'=>$blogContentId ] ) ) {
+						$result = $this->mDb->associateUpdate( BIT_DB_PREFIX."blogs_posts_map", [
 							'crosspost_note' => $pCrosspostNote,
-						), array(
+						], [
 							'post_content_id' => $postContentId,
 							'blog_content_id' => (int)$blogContentId,
-						));
+						]);
 					}
 				}
 			}
@@ -607,7 +604,7 @@ class BitBlogPost extends LibertyMime {
 		$this->StartTrans();
 		if ( !empty($pBlogContentIds) ){
 			foreach( $pBlogContentIds as $blogContentId ) {
-				$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `blog_content_id`=? AND `post_content_id`=?", array( $blogContentId, $pPostContentId ) );
+				$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."blogs_posts_map` WHERE `blog_content_id`=? AND `post_content_id`=?", [ $blogContentId, $pPostContentId ] );
 			}
 		}
 		$this->CompleteTrans();
@@ -650,7 +647,6 @@ class BitBlogPost extends LibertyMime {
 		}
 		return $ret;
 	}
-
 
 	/**
 	 * Generate a valid url for the Blog
@@ -698,10 +694,10 @@ class BitBlogPost extends LibertyMime {
 		return $ret;
 	}
 
-    /**
-    * Returns include file that will
-    * @return string the fully specified path to file to be included
-    */
+	/**
+	* Returns include file that will
+	* @return string the fully specified path to file to be included
+	*/
 	public function getRenderFile() {
 		return BLOGS_PKG_INCLUDE_PATH.'display_bitblogpost_inc.php';
 	}
@@ -715,7 +711,7 @@ class BitBlogPost extends LibertyMime {
 		//Build uri for post
 		$parts = parse_url($_SERVER['REQUEST_URI']);
 		$uri = KernelTools::httpPrefix(). str_replace('post',
-			'view_post', $parts['path']). '?post_id=' . $this->mPostId . '&amp;blog_id=' . $this->mInfo['blog_id'];
+			'view_post', $parts['path'], ). '?post_id=' . $this->mPostId . '&amp;blog_id=' . $this->mInfo['blog_id'];
 		include_once UTIL_PKG_INCLUDE_PATH.'Snoopy/Snoopy.class.php';
 		$snoopy = new \Snoopy;
 
@@ -809,7 +805,7 @@ class BitBlogPost extends LibertyMime {
 
 		if( $pListHash['find'] ) {
 			$findesc = '%' . strtoupper( $pListHash['find'] ) . '%';
- 			$whereSql .= "AND (UPPER(lc.`data`) like ?) ";
+			$whereSql .= "AND (UPPER(lc.`data`) like ?) ";
 			$bindVars[] =$findesc;
 		}
 
@@ -934,7 +930,6 @@ class BitBlogPost extends LibertyMime {
 			$pListHash['offset'] = $pListHash['max_records'] * $lastPageNumber;
 		}
 
-
 		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
 		$ret = [];
 
@@ -943,10 +938,10 @@ class BitBlogPost extends LibertyMime {
 			$res['no_fatal'] = true;
 			$accessError = $this->invokeServices( 'content_verify_access', $res );
 			if( empty( $accessError ) ) {
-				foreach( array( 'avatar', 'image' ) as $img ) {
-					$res[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( array(
-						'source_file' => \Bitweaver\Liberty\liberty_mime_get_source_file( array( 'user_id'=>$res['user_id'], 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( array( 'mime_type' => $res[$img.'_mime_type'], 'name'=>$res[$img.'_file_name'] ) ), 'file_name'=>basename( $res[$img.'_file_name'] ?? '' ), 'sub_dir'=>$res[$img.'_attachment_id'] ) )
-					));
+				foreach( [ 'avatar', 'image' ] as $img ) {
+					$res[$img] = \Bitweaver\Liberty\liberty_fetch_thumbnails( [
+						'source_file' => \Bitweaver\Liberty\liberty_mime_get_source_file( [ 'user_id'=>$res['user_id'], 'package'=>\Bitweaver\Liberty\liberty_mime_get_storage_sub_dir_name( [ 'mime_type' => $res[$img.'_mime_type'], 'name'=>$res[$img.'_file_name'] ] ), 'file_name'=>basename( $res[$img.'_file_name'] ?? '' ), 'sub_dir'=>$res[$img.'_attachment_id'] ] ),
+					]);
 				}
 				$res['thumbnail_url'] = BitBlogPost::getImageThumbnails( $res );
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
@@ -1007,8 +1002,8 @@ class BitBlogPost extends LibertyMime {
 					$res["parsed_data"] = $accessError['access_control'];
 					$ret[] = $res;
 				}
-			} else {
 			}
+
 		}
 		LibertyContent::postGetList( $pListHash );
 
@@ -1061,7 +1056,6 @@ class BitBlogPost extends LibertyMime {
 		return $this->getList( $pParamHash );
 	}
 
-
 	/**
 	 * Get list of posts that have expired and are not displayed on the site anymore
 	 *
@@ -1074,7 +1068,6 @@ class BitBlogPost extends LibertyMime {
 		return $this->getList( $pParamHash );
 	}
 
-
 	/**
 	 *
 	 */
@@ -1084,13 +1077,13 @@ class BitBlogPost extends LibertyMime {
 			$aux = [
 				'title' => $title,
 				'excerpt' => $excerpt,
-				'blog_name' => $blog_name
+				'blog_name' => $blog_name,
 			];
 
 			$tbs[$url] = $aux;
 			$st = serialize($tbs);
 			$query = "update `".BIT_DB_PREFIX."blog_posts` set `trackbacks_from`=? where `post_id`=?";
-			$this->mDb->query( $query, array( $st, $this->mPostId ) );
+			$this->mDb->query( $query, [ $st, $this->mPostId ] );
 			return true;
 		}
 	}
@@ -1122,7 +1115,7 @@ class BitBlogPost extends LibertyMime {
 		if( $this->isValid() ) {
 			$empty = serialize([]);
 			$query = "update `".BIT_DB_PREFIX."blog_posts` set `trackbacks_from` = ? where `post_id`=?";
-			$this->mDb->query( $query, array( $empty, $this->mPostId ) );
+			$this->mDb->query( $query, [ $empty, $this->mPostId ] );
 		}
 	}
 
@@ -1130,10 +1123,10 @@ class BitBlogPost extends LibertyMime {
 	 *
 	 */
 	public function clearTrackbacksTo() {
- 		if( $this->isValid() ) {
- 			$empty = serialize([]);
+		if( $this->isValid() ) {
+			$empty = serialize([]);
 			$query = "update `".BIT_DB_PREFIX."blog_posts` set `trackbacks_to` = ? where `post_id`=?";
-			$this->mDb->query( $query, array( $empty, $this->mPostId ) );
+			$this->mDb->query( $query, [ $empty, $this->mPostId ] );
 		}
 	}
 

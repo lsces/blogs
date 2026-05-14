@@ -5,6 +5,7 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 use Bitweaver\BitBase;
 
 // get a list of blogs for the selection of the home blog
@@ -77,7 +78,7 @@ $formBlogFeatures = [
 	],
 	"blog_hide_empty_usr_list" => [
 		'label' => 'Hide empty blog message on user pages',
-		'note' => 'Enable to hide the "No Records Found" on user\'s blog rolls',	
+		'note' => 'Enable to hide the "No Records Found" on user\'s blog rolls',
 	],
 ];
 $gBitSmarty->assign( 'formBlogFeatures',$formBlogFeatures );
@@ -104,8 +105,8 @@ if( $processForm ) {
 	$gBitSystem->storeConfig("blog_posts_comments", isset( $_REQUEST["blog_posts_comments"] ) ? 'y' : 'n', BLOGS_PKG_NAME );
 	$gBitSystem->storeConfig("blog_list_order", $_REQUEST["blog_list_order"], BLOGS_PKG_NAME );
 	$gBitSystem->storeConfig("blog_list_user_as", $_REQUEST["blog_list_user_as"], BLOGS_PKG_NAME );
-	$gBitSystem->storeConfig("blog_posts_description_length", $_REQUEST["blog_posts_description_length"], BLOGS_PKG_NAME );	
-	$gBitSystem->storeConfig("blog_posts_autosplit", isset( $_REQUEST["blog_posts_autosplit"] ) ? 'y' : 'n', BLOGS_PKG_NAME );	
+	$gBitSystem->storeConfig("blog_posts_description_length", $_REQUEST["blog_posts_description_length"], BLOGS_PKG_NAME );
+	$gBitSystem->storeConfig("blog_posts_autosplit", isset( $_REQUEST["blog_posts_autosplit"] ) ? 'y' : 'n', BLOGS_PKG_NAME );
 	$gBitSmarty->assign('blog_list_order', $_REQUEST["blog_list_order"]);
 	$gBitSmarty->assign('blog_list_user_as', $_REQUEST['blog_list_user_as']);
 }

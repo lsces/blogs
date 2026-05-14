@@ -14,13 +14,14 @@
  */
 
 namespace Bitweaver\Liberty;
+
 use Bitweaver\KernelTools;
 use Bitweaver\Blogs\BitBlogPost;
 require_once BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php';
 
 $gBitSystem->verifyPackage( 'blogs' );
 
-$displayHash = array( 'perm_name' => $gContent->mViewContentPerm );
+$displayHash = [ 'perm_name' => $gContent->mViewContentPerm ];
 $gContent->invokeServices( 'content_display_function', $displayHash );
 
 if( isset($_REQUEST['user_id']) && !isset( $_REQUEST['blog_id'] ) ) {

@@ -13,6 +13,7 @@
  * required setup
  */
 namespace Bitweaver\Blogs;
+
 require_once '../kernel/includes/setup_inc.php';
 use Bitweaver\KernelTools;
 use Bitweaver\Liberty\LibertyContent;
@@ -59,4 +60,4 @@ $gBitSystem->setBrowserTitle( KernelTools::tra( 'Edit Blog' ).' - '.$gContent->g
 $gBitSmarty->assign( 'textarea_label', 'Blog Description' );
 
 $gBitSmarty->assign('gContent', $gContent);
-$gBitSystem->display( 'bitpackage:blogs/edit_blog.tpl', null, array( 'display_mode' => 'edit' ));
+$gBitSystem->display( 'bitpackage:blogs/edit_blog.tpl', null, [ 'display_mode' => 'edit' ]);

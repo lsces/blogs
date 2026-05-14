@@ -19,7 +19,7 @@ if( !empty($module_params['date_start_offset']) ){
 	$date_start = time() - ( $module_params['date_start_offset'] * 3600 );
 }
 
-$defaultsHash = array(
+$defaultsHash = [
 	'sort_mode'   => ( !empty( $module_params['sort_mode'] ) ? $module_params['sort_mode'] : 'publish_date_desc' ),
 	'max_records' => $module_rows,
 	'parse_data'  => true,
@@ -29,7 +29,7 @@ $defaultsHash = array(
 	'role_id'     => ( BitBase::verifyId( $module_params['role_id'] ) ? $module_params['role_id'] : null ),
 	'date_start'  =>  $date_start,
 	'offset'	  => ( !empty( $module_params['offset'] ) ? $module_params['offset'] : 0 ),
-);
+];
 
 $listHash = array_merge($module_params, $defaultsHash);
 
@@ -46,7 +46,7 @@ $listHash['enforce_status'] = true;
 
 if ( !empty( $module_params['status'] ) && $module_params['status'] = "draft" && isset( $gBitUser->mUserId ) ){
 	// if we are getting drafts then get future posts too
-    $listHash['show_future'] = true;
+	$listHash['show_future'] = true;
 	$listHash['min_status_id'] = -6;
 	$listHash['max_status_id'] = -4;
 	$listHash['min_owner_status_id'] = -6;
@@ -55,7 +55,6 @@ if ( !empty( $module_params['status'] ) && $module_params['status'] = "draft" &&
 }else{
 	$listHash['min_owner_status_id'] = 0;
 }
-
 
 $blogPost = new BitBlogPost();
 $blogPosts = $blogPost->getList( $listHash );
