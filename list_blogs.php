@@ -49,6 +49,5 @@ $blogsList = $gContent->getList( $_REQUEST );
 $gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
 $gBitSmarty->assign( 'blogsList', $blogsList );
 
-$gBitSmarty->assign( 'role_model', true );
 // Display the template
 $gBitSystem->display( 'bitpackage:blogs/list_blogs.tpl', null, [ 'display_mode' => 'list' ]);
