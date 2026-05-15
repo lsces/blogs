@@ -20,7 +20,7 @@ require_once BLOGS_PKG_INCLUDE_PATH.'lookup_blog_inc.php';
 $gBitSystem->verifyPackage( 'blogs' );
 
 // Now check permissions to access this page
-$gContent->verifyViewPermission();
+// $gContent->verifyViewPermission();
 
 if ( $gBitSystem->isFeatureActive( 'blog_ajax_more' ) && $gBitThemes->isJavascriptEnabled() ){
 	$gBitSmarty->assign('ajax_more', true);
