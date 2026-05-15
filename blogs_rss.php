@@ -3,9 +3,9 @@
 use Bitweaver\Blogs\BitBlog;
 use Bitweaver\KernelTools;
 use Bitweaver\Rss\FeedItem;
-use Bitweaver\Users\BitPermUser;
-use Bitweaver\Users\BitUser;
+use Bitweaver\Blogs\BitBlogPost;
 use Bitweaver\Users\RoleUser;
+use Bitweaver\Users\RolePermUser;
 /**
  * @version $Header$
  * @package blogs
@@ -16,8 +16,6 @@ use Bitweaver\Users\RoleUser;
  * Initialization
  */
 require_once( "../kernel/includes/setup_inc.php" );
-use Bitweaver\Blogs\BitBlogPost;
-use Bitweaver\Users\RolePermUser;
 
 $gBitSystem->verifyPackage( 'rss' );
 $gBitSystem->verifyPackage( 'blogs' );
@@ -43,7 +41,7 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 	$listHash['parse_data'] = true;
 	$listHash['full_data'] = true;
 	if( !empty( $_REQUEST['user_id'] ) ) {
-		$blogUser = $gBitSystem->getConfig( 'user_class', 'BitPermUser' ) == 'RolePermUser' ? new RoleUser() : new BitUser();
+		$blogUser = new RoleUser();
 
 		$userData = $blogUser->getUserInfo( [ 'user_id' => $_REQUEST['user_id'] ] );
 		// dont try and fool me
@@ -51,16 +49,6 @@ if( !$gBitUser->hasPermission( 'p_blogs_view' ) ) {
 			$userName = $userData['real_name']?$userData['real_name']:$userData['login'];
 			$rss->title = $userName." at ".$gBitSystem->getConfig( 'site_title' );
 			$listHash['user_id'] = $_REQUEST['user_id'];
-		}
-	} else if( !empty( $_REQUEST['group_id'] ) ) {
-		require_once USERS_PKG_PATH . 'BitPermUser.php';
-		$permUser = new BitPermUser();
-		$groupData = $permUser->getGroupInfo( $_REQUEST['group_id'] );
-		// dont try and fool me
-		if (!empty($groupData)){
-			$groupName = $groupData['group_name'];
-			$rss->title = $groupName." Group at ".$gBitSystem->getConfig( 'site_title' );
-			$listHash['group_id'] = $_REQUEST['group_id'];
 		}
 	} else if( !empty( $_REQUEST['role_id'] ) ) {
 		$permUser = new RolePermUser();
