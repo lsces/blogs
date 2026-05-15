@@ -1,11 +1,11 @@
 <?php
 
 use Bitweaver\Blogs\BitBlog;
+use Bitweaver\Blogs\BitBlogPost;
 use Bitweaver\KernelTools;
 use Bitweaver\Rss\FeedItem;
-use Bitweaver\Blogs\BitBlogPost;
-use Bitweaver\Users\RoleUser;
 use Bitweaver\Users\RolePermUser;
+use Bitweaver\Users\RoleUser;
 /**
  * @version $Header$
  * @package blogs
