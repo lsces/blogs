@@ -126,7 +126,7 @@ class BitBlogPost extends LibertyMime {
 					$this->mInfo['raw_more'] = $parts[1] ?? null ;
 				}
 
-				$this->mInfo['data'] = preg_replace( LIBERTY_SPLIT_REGEX, "", $this->mInfo['data'] );
+				$this->mInfo['data'] = preg_replace( LIBERTY_SPLIT_REGEX, "", $this->mInfo['data'] ?? '' );
 				$this->mInfo['use_title'] = $gBitUser->getPreference( 'user_blog_posts_use_title', 'y' ) ;
 
 				if( isset($extraParams[0]['load_comments']) and $extraParams[0]['load_comments'] ) {
