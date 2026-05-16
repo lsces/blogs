@@ -84,7 +84,7 @@ $gBitSmarty->assign('parsed_data', $parsed_data);
 $gBitSmarty->assign('post_info', $gContent->mInfo );
 
 // Display the template
-if ( isset( $_REQUEST['output'] ) && $_REQUEST['output']="ajax"){
+if ( isset( $_REQUEST['output'] ) && $_REQUEST['output'] == "ajax"){
 	$gBitSystem->display( 'bitpackage:blogs/view_blog_post_xml.tpl', null, [ 'format' => 'center_only', 'display_mode' => 'display' ] );
 }else{
 	$gBitSystem->display( 'bitpackage:blogs/view_blog_post.tpl' , null, [ 'display_mode' => 'display' ] );

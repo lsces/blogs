@@ -26,6 +26,13 @@
 	{/if}
 
 	<div class="header">
+		{if $showBlogTitle eq 'y' && $aPost.blogs}
+			<div class="blog-title">
+				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=blogTitleLoop}
+					{if !$smarty.foreach.blogTitleLoop.first} &bull; {/if}<a href="{$memberBlog.blog_url}">{$memberBlog.title|escape}</a>
+				{/foreach}
+			</div>
+		{/if}
 		<h2>
 		{if $aPost.title}
 			{$aPost.title|escape:html}
@@ -44,7 +51,7 @@
 			{/if}<br/>
 
 			{$aPost.publish_date|default:$aPost.created|bit_long_date}<br />
-			{if count($aPost.blogs) > 0}
+			{if $showBlogTitle ne 'y' && count($aPost.blogs) > 0}
 				{tr}Posted to{/tr}&nbsp;
 				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
 					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
@@ -71,7 +78,6 @@
 			
 			{if $showDescriptionsOnly}
 				{$aPost.summary|default:$aPost.parsed_description}
-				{if $ajax_more}<div id="post_more_{$aPost.post_id}"></div>{/if}
 			{else}
 				{$aPost.parsed_data}
 			{/if}
@@ -90,11 +96,7 @@
 		{if $showDescriptionsOnly && $aPost.has_more}
 			{if $spacer}&nbsp; &bull; &nbsp;{/if}
 			{assign var=spacer value=true}
-			{if $ajax_more}
-				<a href="javascript:void(0);" onclick="BitAjax.updater( 'post_more_{$aPost.post_id}', '{$smarty.const.BLOGS_PKG_URL}view_post.php', 'blog_id={$aPost.blog_id|default:0}&post_id={$aPost.post_id}&format={if $aPost.summary}data{else}more{/if}&output=ajax' )">{tr}Read More{/tr}</a>
-			{else}
-				<a class="more" href="{$aPost.display_url}">{tr}Read More&hellip;{/tr}</a>
-			{/if}
+			<a class="more" role="button" data-toggle="modal" data-target="#blogPostModal" data-post-title="{$aPost.title|escape}" data-post-url="{$aPost.display_url}" data-fetch-url="{$smarty.const.BLOGS_PKG_URL}view_post.php?post_id={$aPost.post_id}&amp;output=ajax&amp;format=data">{tr}Read More&hellip;{/tr}</a>
 		{/if}
 
 		{if $aPost.trackbacks_from_count}({tr}referenced by{/tr}: {$aPost.trackbacks_from_count} {tr}posts{/tr} / {tr}references{/tr}: {$aPost.trackbacks_to_count} {tr}posts{/tr}){/if}
