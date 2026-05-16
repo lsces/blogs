@@ -55,3 +55,4 @@
 	{pagination blog_id=$gContent->mBlogId}
 </div><!-- end .blogs -->
 {/strip}
+{include file="bitpackage:blogs/blog_post_modal_inc.tpl"}
