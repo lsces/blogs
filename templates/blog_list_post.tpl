@@ -26,13 +26,6 @@
 	{/if}
 
 	<div class="header">
-		{if $showBlogTitle eq 'y' && $aPost.blogs}
-			<div class="blog-title">
-				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=blogTitleLoop}
-					{if !$smarty.foreach.blogTitleLoop.first} &bull; {/if}<a href="{$memberBlog.blog_url}">{$memberBlog.title|escape}</a>
-				{/foreach}
-			</div>
-		{/if}
 		<h2>
 		{if $aPost.title}
 			{$aPost.title|escape:html}
@@ -51,7 +44,7 @@
 			{/if}<br/>
 
 			{$aPost.publish_date|default:$aPost.created|bit_long_date}<br />
-			{if $showBlogTitle ne 'y' && count($aPost.blogs) > 0}
+			{if count($aPost.blogs) > 0}
 				{tr}Posted to{/tr}&nbsp;
 				{foreach from=$aPost.blogs item=memberBlog key=blogContentId name=memberBlogLoop}
 					<a href="{$memberBlog.blog_url}">{$memberBlog.title}</a>{if $smarty.foreach.memberBlogLoop.total > 1 && !$smarty.foreach.memberBlogLoop.last }, {/if}
