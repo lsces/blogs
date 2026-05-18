@@ -36,10 +36,15 @@ if( $gBitSystem->isPackageActive( 'blogs' ) ) {
 		];
 		$gBitSystem->registerAppMenu( $menuHash );
 
+		require_once BLOGS_PKG_CLASS_PATH.'LibertyBlogService.php';
+
 		$gLibertySystem->registerService(
 			LIBERTY_SERVICE_BLOGS,
 			BLOGS_PKG_NAME,
-			[ 'module_display_function'  => 'blogs_module_display', ],
+			[
+				'module_display_function'  => 'blogs_module_display',
+				'search_extra_sql_function' => 'blogs_search_extra_sql',
+			],
 			[
 				'description' => KernelTools::tra( 'A module display service which helps hook in javascript necessary when using the center module on other pages. This is a temporary fix to address a limitation of the rendering order in BitThemes and only applies to blog content.' ),
 				'required' => true,
