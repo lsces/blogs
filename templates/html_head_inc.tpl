@@ -30,7 +30,7 @@
 		if (e != null){
 			e.style.display = 'none';
 			e.innerHTML = rslt.responseText;
-			MochiKit.Visual.blindDown( e, {duration:1} );
+			$(e).slideDown();
 		}
 	}
 /* ]]> */</script>

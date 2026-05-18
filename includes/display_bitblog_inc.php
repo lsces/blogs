@@ -93,7 +93,6 @@ $gBitSmarty->assign('showDescriptionsOnly', true);
 
 if ( $gBitSystem->isFeatureActive( 'blog_ajax_more' ) && $gBitThemes->isJavascriptEnabled() ){
 	$gBitSmarty->assign('ajax_more', true);
-	$gBitThemes->loadAjax( 'mochikit', [ 'Iter.js', 'DOM.js', 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ] );
 }
 
 if( $gContent->isValid() ) {

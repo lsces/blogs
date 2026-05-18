@@ -410,6 +410,5 @@ function blogs_module_display(&$pParamHash){
 	global $gBitThemes, $gBitSmarty, $gBitSystem;
 	if( $gBitThemes->isModuleLoaded( 'bitpackage:blogs/center_list_blog_posts.tpl', 'c' ) && $gBitSystem->isFeatureActive( 'blog_ajax_more' ) && $gBitThemes->isJavascriptEnabled() ) {
 		$gBitSmarty->assign( 'ajax_more', true );
-		$gBitThemes->loadAjax( 'mochikit', [ 'Iter.js', 'DOM.js', 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ]);
 	}
 }
