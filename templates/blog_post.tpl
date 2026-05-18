@@ -96,22 +96,22 @@
 				{jstab title="Advanced Options"}
 					{legend legend="Publication and Expiration Dates"}
 						<div class="form-group">
-							<input type="hidden" name="publishDateInput" value="1" />
-							{formlabel label="Publish Date" for=""}
+							{formlabel label="Publish Date" for="publish_dt"}
 							{forminput}
-								{html_select_date prefix="publish_" time=$post_info.publish_date|default:0 start_year="-1" end_year="+10"} at&nbsp;
-								<span dir="ltr">{html_select_time prefix="publish_" time=$post_info.publish_date|default:0 display_seconds=false}&nbsp;{$siteTimeZone}</span>
-								{formhelp note="This post will not be displayed <strong>before</strong> this date."}
+								<input type="datetime-local" name="publish_dt" id="publish_dt"
+									value="{($post_info.publish_date ?: $smarty.now)|date_format:'%Y-%m-%dT%H:%M'}" />
+								&nbsp;{$siteTimeZone}
+								{formhelp note="This post will not be displayed <strong>before</strong> this date. Leave blank to publish immediately."}
 							{/forminput}
 						</div>
 
 						<div class="form-group">
-							<input type="hidden" name="expireDateInput" value="1" />
-							{formlabel label="Expiration Date" for=""}
+							{formlabel label="Expiration Date" for="expire_dt"}
 							{forminput}
-								{html_select_date prefix="expire_" time=$post_info.expire_date|default:0 start_year="+5" end_year="+10"} at&nbsp;
-								<span dir="ltr">{html_select_time prefix="expire_" time=$post_info.expire_date|default:0 display_seconds=false}&nbsp;{$siteTimeZone}</span>
-								{formhelp note="If this date is set after the publish date, this post will not be displayed <strong>after</strong> the expiration date."}
+								<input type="datetime-local" name="expire_dt" id="expire_dt"
+									value="{if $post_info.expire_date}{$post_info.expire_date|date_format:'%Y-%m-%dT%H:%M'}{/if}" />
+								&nbsp;{$siteTimeZone}
+								{formhelp note="If set, this post will not be displayed <strong>after</strong> this date."}
 							{/forminput}
 						</div>
 					{/legend}

@@ -324,54 +324,28 @@ class BitBlogPost extends LibertyMime {
 			$pParamHash['title'] = substr( $pParamHash['title'], 0, 160 );
 		}
 
-		if( !empty( $pParamHash['publish_Month'] ) ) {
-			//$dateString = $pParamHash['publish_Year'].'-'.$pParamHash['publish_Month'].'-'.$pParamHash['publish_Day'].' '.$pParamHash['publish_Hour'].':'.$pParamHash['publish_Minute'];
-
-			//old way
-			//$timestamp = $gBitSystem->mServerTimestamp->getUTCFromDisplayDate( strtotime( $dateString ) );
-			//new way
-			$this->mDate = new BitDate(0);
-			$offset = $this->mDate->get_display_offset();
-
-			$dateString = $this->mDate->gmmktime(
-				$pParamHash['publish_Hour'],
-				$pParamHash['publish_Minute'],
-				$pParamHash['publish_Second'] ?? 0,
-				$pParamHash['publish_Month'],
-				$pParamHash['publish_Day'],
-				$pParamHash['publish_Year'],
-			);
-
-			$timestamp = $this->mDate->getUTCFromDisplayDate( $dateString );
-
-			if( $timestamp !== -1 ) {
-				$pParamHash['publish_date'] = $timestamp;
+		if( !empty( $pParamHash['publish_dt'] ) ) {
+			$parts = date_parse( $pParamHash['publish_dt'] );
+			if( $parts !== false && empty( $parts['errors'] ) ) {
+				$this->mDate = new BitDate(0);
+				$ts = $this->mDate->gmmktime( $parts['hour'], $parts['minute'], 0, $parts['month'], $parts['day'], $parts['year'] );
+				$timestamp = $this->mDate->getUTCFromDisplayDate( $ts );
+				if( $timestamp !== -1 ) {
+					$pParamHash['publish_date'] = $timestamp;
+				}
 			}
 		}
 		$pParamHash['post_store']['publish_date'] = !empty( $pParamHash['publish_date'] ) ? $pParamHash['publish_date'] : $gBitSystem->getUTCTime();
 
-		if( !empty( $pParamHash['expire_Month'] ) ) {
-			$dateString = $pParamHash['expire_Year'].'-'.$pParamHash['expire_Month'].'-'.$pParamHash['expire_Day'].' '.$pParamHash['expire_Hour'].':'.$pParamHash['expire_Minute'];
-
-			//old way
-			//$timestamp = $gBitSystem->mServerTimestamp->getUTCFromDisplayDate( strtotime( $dateString ) );
-			//new way
-			$this->mDate = new BitDate(0);
-			$offset = $this->mDate->get_display_offset();
-
-			$dateString = $this->mDate->gmmktime(
-				$pParamHash['expire_Hour'],
-				$pParamHash['expire_Minute'],
-				$pParamHash['expire_Second'] ?? 0,
-				$pParamHash['expire_Month'],
-				$pParamHash['expire_Day'],
-				$pParamHash['expire_Year'],
-			);
-
-			$timestamp = $this->mDate->getUTCFromDisplayDate( $dateString );
-
-			if( $timestamp !== -1 ) {
-				$pParamHash['expire_date'] = $timestamp;
+		if( !empty( $pParamHash['expire_dt'] ) ) {
+			$parts = date_parse( $pParamHash['expire_dt'] );
+			if( $parts !== false && empty( $parts['errors'] ) ) {
+				$this->mDate = new BitDate(0);
+				$ts = $this->mDate->gmmktime( $parts['hour'], $parts['minute'], 0, $parts['month'], $parts['day'], $parts['year'] );
+				$timestamp = $this->mDate->getUTCFromDisplayDate( $ts );
+				if( $timestamp !== -1 ) {
+					$pParamHash['expire_date'] = $timestamp;
+				}
 			}
 		}
 		$pParamHash['post_store']['expire_date'] = !empty( $pParamHash['expire_date'] )
