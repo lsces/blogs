@@ -94,7 +94,6 @@ $gBitSmarty->assign( 'blogPosts', $blogPosts );
 $gBitSmarty->assign( 'listInfo', $listHash );
 $gBitSmarty->assign( 'descriptionLength', $gBitSystem->getConfig( 'blog_posts_description_length', 500 ));
 $gBitSmarty->assign( 'showDescriptionsOnly', true );
-$gBitSmarty->assign( 'showBlogTitle', 'y' );
 $gBitSmarty->assign( 'blogPostsFormat', empty( $module_params['format'] ) ? 'full' : $module_params['format'] );
 // unfortunately, the following feature pulls module parameters in from other modules
 //$gBitSmarty->assign( 'centerTitle', $moduleParams['title'] );
