@@ -9,18 +9,18 @@
 		<div class="floaticon">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$aPost}
 			{if $gBitUser->hasPermission( 'p_blogs_admin' )}
-				<a title="{tr}Crosspost{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?post_id={$aPost.post_id}">{booticon iname="icon-paper-clip"  ipackage="icons"  iexplain="crosspost"}</a>
+				<a title="{tr}Crosspost{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="mail-attachment"  ipackage="icons"  iexplain="crosspost"}</a>
 			{/if}
 
-			<a title="{tr}Print{/tr}" href="{$smarty.const.BLOGS_PKG_URL}print_blog_post.php?post_id={$aPost.post_id}">{booticon iname="icon-print"  ipackage="icons"  iexplain="print"}</a>
+			<a title="{tr}Print{/tr}" href="{$smarty.const.BLOGS_PKG_URL}print_blog_post.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="document-print"  ipackage="icons"  iexplain="print"}</a>
 			{if $gBitUser->hasPermission('p_blogs_send_post')}
-				<a title="{tr}Email this post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}send_post.php?post_id={$aPost.post_id}">{booticon iname="icon-envelope"  ipackage="icons"  iexplain="email this post"}</a>
+				<a title="{tr}Email this post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}send_post.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="internet-mail"  ipackage="icons"  iexplain="email this post"}</a>
 			{/if}
 
 			{if ($aPost.ownsblog eq 'y') || ($gBitUser->mUserId && $aPost.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="edit"}</a>
-				<a title="{tr}History{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post_history.php?content_id={$aPost.content_id}">{booticon iname="fa-clock" iexplain="History"}</a>
-				<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$aPost.post_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
+				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{biticon ipackage="icons" iname="document-properties" ipackage="icons" iexplain="edit"}</a>
+				<a title="{tr}History{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post_history.php?content_id={$aPost.content_id}">{biticon ipackage="icons" iname="appointment" iexplain="History"}</a>
+				<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$aPost.post_id}">{biticon ipackage="icons" iname="edit-delete" ipackage="icons" iexplain="delete"}</a>
 			{/if}
 		</div>
 	{/if}

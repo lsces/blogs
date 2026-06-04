@@ -11,7 +11,7 @@
 		{minifind sort_mode=$sort_mode}
 
 		<ul class="list-inline navbar">
-			<li>{booticon iname="icon-circle-arrow-right"  ipackage="icons"  iexplain="sort by"}</li>
+			<li>{biticon ipackage="icons" iname="go-next"  ipackage="icons"  iexplain="sort by"}</li>
 			{if $gBitSystem->isFeatureActive( 'blog_list_title' )}
 				<li>{smartlink ititle="Title" isort="title" offset=$offset}</li>
 			{/if}
@@ -45,21 +45,21 @@
 					<div class="floaticon">
 						{if $gBitUser->hasPermission( 'p_liberty_assign_content_perms' ) && $listBlog.content_id}
 							{if !empty($gContent->mPerms)} {* org note from liberty:service_content_icon_inc: don't think there is a serviceHash way of working out if there are individual permissions set *}
-								{assign var=perm_icon value="icon-lock"}
+								{assign var=perm_icon value="lock"}
 							{else}
-								{assign var=perm_icon value="icon-key"}
+								{assign var=perm_icon value="lock"}
 							{/if}
-							{smartlink ipackage=liberty ifile="content_role_permissions.php" ititle="Assign Permissions" booticon=$perm_icon content_id=$listBlog.content_id}
+							{smartlink ipackage=liberty ifile="content_role_permissions.php" ititle="Assign Permissions" biticon=$perm_icon content_id=$listBlog.content_id}
 						{/if}
 
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || ($gBitUser->hasPermission( 'p_blogs_admin' )) || ($listBlog.is_public eq 'y')}
-									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{booticon iname="icon-edit" ipackage="icons" iexplain="post"}</a>
+									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="document-properties" ipackage="icons" iexplain="post"}</a>
 						{/if}
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{booticon iname="icon-file"  ipackage="icons"  iexplain="configure"}</a>
+							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="text-x-generic"  ipackage="icons"  iexplain="configure"}</a>
 						{/if}
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="delete"}</a>
+							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="edit-delete" ipackage="icons" iexplain="delete"}</a>
 						{/if}
 					</div>
 
