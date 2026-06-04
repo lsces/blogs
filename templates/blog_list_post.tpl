@@ -9,7 +9,7 @@
 		<div class="floaticon">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$aPost}
 			{if $gBitUser->hasPermission( 'p_blogs_admin' )}
-				<a title="{tr}Crosspost{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="mail-attachment"  ipackage="icons"  iexplain="crosspost"}</a>
+				<a title="{tr}Crosspost{/tr}" href="{$smarty.const.BLOGS_PKG_URL}crosspost.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="stock_attach"  ipackage="icons"  iexplain="crosspost"}</a>
 			{/if}
 
 			<a title="{tr}Print{/tr}" href="{$smarty.const.BLOGS_PKG_URL}print_blog_post.php?post_id={$aPost.post_id}">{biticon ipackage="icons" iname="document-print"  ipackage="icons"  iexplain="print"}</a>
