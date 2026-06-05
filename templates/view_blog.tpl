@@ -25,7 +25,7 @@
 		{/if}
 
 		{if ($gContent->hasUpdatePermission())}
-			<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?remove=1&amp;blog_id={$gContent->getField('blog_id')}">{biticon ipackage="icons" iname="edit-delete" ipackage="icons" iexplain="delete"}</a>
+			<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?remove=1&amp;blog_id={$gContent->getField('blog_id')}">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
 		{/if}
 	</div>
 

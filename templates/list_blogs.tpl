@@ -59,7 +59,7 @@
 							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="text-x-generic"  ipackage="icons"  iexplain="configure"}</a>
 						{/if}
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="edit-delete" ipackage="icons" iexplain="delete"}</a>
+							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
 						{/if}
 					</div>
 

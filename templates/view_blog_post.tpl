@@ -41,7 +41,7 @@
 						<a title="{tr}History{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post_history.php?content_id={$post_info.content_id}">{biticon ipackage="icons" iname="appointment" iexplain="History"}</a>
 					{/if}
 					{if $gContent->hasUserPermission( 'p_blogs_admin' )}
-						<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$post_info.post_id}&amp;status_id=300">{biticon ipackage="icons" iname="edit-delete" ipackage="icons" iexplain="delete"}</a>
+						<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$post_info.post_id}&amp;status_id=300">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
 					{/if}
 				{/if}
 			</div>
