@@ -18,7 +18,7 @@
 			{/if}
 
 			{if ($aPost.ownsblog eq 'y') || ($gBitUser->mUserId && $aPost.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{biticon ipackage="icons" iname="document-properties" ipackage="icons" iexplain="edit"}</a>
+				<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$aPost.blog_id|default:0}&amp;post_id={$aPost.post_id}">{biticon ipackage="icons" iname="edit" ipackage="icons" iexplain="edit"}</a>
 				<a title="{tr}History{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post_history.php?content_id={$aPost.content_id}">{biticon ipackage="icons" iname="appointment" iexplain="History"}</a>
 				<a title="{tr}Remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?action=remove&amp;post_id={$aPost.post_id}">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
 			{/if}

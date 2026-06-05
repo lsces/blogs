@@ -37,7 +37,7 @@
 					{/if}
 
 					{if $gContent->hasUpdatePermission()}
-						<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$post_info.blog_id|default:0}&amp;post_id={$post_info.post_id}">{biticon ipackage="icons" iname="document-properties" ipackage="icons" iexplain="edit"}</a>
+						<a title="{tr}Edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$post_info.blog_id|default:0}&amp;post_id={$post_info.post_id}">{biticon ipackage="icons" iname="edit" ipackage="icons" iexplain="edit"}</a>
 						<a title="{tr}History{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post_history.php?content_id={$post_info.content_id}">{biticon ipackage="icons" iname="appointment" iexplain="History"}</a>
 					{/if}
 					{if $gContent->hasUserPermission( 'p_blogs_admin' )}

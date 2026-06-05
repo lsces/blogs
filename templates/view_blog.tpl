@@ -13,7 +13,7 @@
 		{/if}
 
 		{if $gContent->hasUpdatePermission()}
-			<a title="{tr}Edit blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="text-x-generic"  ipackage="icons"  iexplain="edit"}</a>
+			<a title="{tr}Edit blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="view-list-text"  ipackage="icons"  iexplain="edit"}</a>
 		{/if}
 
 		{if $gBitUser->isRegistered() && $gBitSystem->isFeatureActive( 'users_watches' )}
