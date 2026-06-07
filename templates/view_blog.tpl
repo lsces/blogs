@@ -5,27 +5,27 @@
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 
 		{if $gContent->hasUserPermission( 'p_blogs_post' )}
-			<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="document-save"  ipackage="icons"  iexplain="post"}</a>
+			<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="document-save"  iexplain="post"}</a>
 		{/if}
 
 		{if $gBitSystem->isPackageActive( 'rss' )}
-			<a title="{tr}RSS feed{/tr}" href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="network-transmit" ipackage="icons" iexplain="RSS feed"}</a>
+			<a title="{tr}RSS feed{/tr}" href="{$smarty.const.BLOGS_PKG_URL}blogs_rss.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="network-transmit" iexplain="RSS feed"}</a>
 		{/if}
 
 		{if $gContent->hasUpdatePermission()}
-			<a title="{tr}Edit blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="view-list-text"  ipackage="icons"  iexplain="edit"}</a>
+			<a title="{tr}Edit blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$gContent->mBlogId}">{biticon ipackage="icons" iname="view-list-text"  iexplain="edit"}</a>
 		{/if}
 
 		{if $gBitUser->isRegistered() && $gBitSystem->isFeatureActive( 'users_watches' )}
 			{if $user_watching_blog eq 'n'}
-				<a title="{tr}monitor this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=add">{biticon ipackage="icons" iname="emblem-important"  ipackage="icons"  iexplain="monitor this blog"}</a>
+				<a title="{tr}monitor this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=add">{biticon ipackage="icons" iname="emblem-important"  iexplain="monitor this blog"}</a>
 			{else}
 				<a title="{tr}stop monitoring this blog{/tr}" href="{$smarty.const.BLOGS_PKG_URL}view.php?blog_id={$gContent->mBlogId}&amp;watch_event=blog_post&amp;watch_object={$gContent->mBlogId}&amp;watch_action=remove">{biticon ipackage="icons" iname="weather-clear-night" iexplain="stop monitoring this blog"}</a>
 			{/if}
 		{/if}
 
 		{if ($gContent->hasUpdatePermission())}
-			<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?remove=1&amp;blog_id={$gContent->getField('blog_id')}">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
+			<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?remove=1&amp;blog_id={$gContent->getField('blog_id')}">{biticon ipackage="icons" iname="user-trash" iexplain="delete"}</a>
 		{/if}
 	</div>
 

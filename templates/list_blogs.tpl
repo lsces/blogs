@@ -11,7 +11,7 @@
 		{minifind sort_mode=$sort_mode}
 
 		<ul class="list-inline navbar">
-			<li>{biticon ipackage="icons" iname="go-next"  ipackage="icons"  iexplain="sort by"}</li>
+			<li>{biticon ipackage="icons" iname="go-next"  iexplain="sort by"}</li>
 			{if $gBitSystem->isFeatureActive( 'blog_list_title' )}
 				<li>{smartlink ititle="Title" isort="title" offset=$offset}</li>
 			{/if}
@@ -53,13 +53,13 @@
 						{/if}
 
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || ($gBitUser->hasPermission( 'p_blogs_admin' )) || ($listBlog.is_public eq 'y')}
-									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="edit" ipackage="icons" iexplain="post"}</a>
+									<a title="{tr}post{/tr}" href="{$smarty.const.BLOGS_PKG_URL}post.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="edit" iexplain="post"}</a>
 						{/if}
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="view-list-text"  ipackage="icons"  iexplain="configure"}</a>
+							<a title="{tr}edit{/tr}" href="{$smarty.const.BLOGS_PKG_URL}edit.php?blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="view-list-text"  iexplain="configure"}</a>
 						{/if}
 						{if ($gBitUser->mUserId && $listBlog.user_id eq $gBitUser->mUserId) || $gBitUser->hasPermission( 'p_blogs_admin' )}
-							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="user-trash" ipackage="icons" iexplain="delete"}</a>
+							<a title="{tr}remove{/tr}" href="{$smarty.const.BLOGS_PKG_URL}list_blogs.php?offset={$offset}&amp;sort_mode={$sort_mode}&amp;remove=1&amp;blog_id={$listBlog.blog_id}">{biticon ipackage="icons" iname="user-trash" iexplain="delete"}</a>
 						{/if}
 					</div>
 
