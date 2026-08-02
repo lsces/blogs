@@ -113,7 +113,7 @@ class BitBlog extends LibertyMime {
 
 		$bindVars = [ (int) $lookupId ];
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
-		$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+		$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, $this );
 
 		if ( BitBase::verifyId( $lookupId ) ) {
 			$query = "

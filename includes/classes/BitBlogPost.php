@@ -77,7 +77,7 @@ class BitBlogPost extends LibertyMime {
 			$lookupColumn = $this->verifyId( $this->mPostId )? 'post_id' : 'content_id';
 			$lookupId = $this->verifyId( $this->mPostId )? $this->mPostId : $this->mContentId;
 			array_push( $bindVars, $lookupId );
-			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, $this );
 
 			$query = "
 				SELECT bp.*, lc.*, lcds.`data` AS `summary`, lch.`hits`, uu.`login`, uu.`real_name`,
