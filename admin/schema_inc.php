@@ -5,8 +5,8 @@ $tables = [
 'blog_posts' => "
 	post_id I4 PRIMARY,
 	content_id I4 NOTNULL,
-	publish_date I4,
-	expire_date I4,
+	publish_date I8,
+	expire_date I8,
 	trackbacks_to X,
 	trackbacks_from X
 	CONSTRAINT '
@@ -30,7 +30,7 @@ $tables = [
 'blogs_posts_map' => "
 	post_content_id I4 NOTNULL,
 	blog_content_id I4 NOTNULL,
-	date_added I4,
+	date_added I8,
 	crosspost_note X
 	CONSTRAINT ', CONSTRAINT `blogs_posts_map_post_ref` FOREIGN KEY (`post_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 				, CONSTRAINT `blogs_posts_map_blog_ref` FOREIGN KEY (`blog_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
