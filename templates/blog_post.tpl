@@ -127,7 +127,7 @@
 					{/legend}
 				{/jstab}
 				<div class="form-group submit">
-					<input type="submit" class="btn btn-default" name="preview" value="Preview" />&nbsp;
+					<input type="submit" class="btn btn-default" name="preview" value="Preview" />
 					<input type="submit" class="btn btn-default" name="save_post_exit" value="Save" />
 				</div>
 			{/jstabs}

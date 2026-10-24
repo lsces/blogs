@@ -63,7 +63,7 @@
 							{textarea id="crosspost_note" label="Crosspost Note (Optional)" name="crosspost_note" noformat="y" rows=6 help="Add a note you would like to appear above the post when viewed on the crossposted blog. This does not appear on the post page." edit=$crosspost.crosspost_note}
 
 							<div class="form-group submit">
-								<input type="submit" class="btn btn-default" name="preview" value="{tr}Preview{/tr}" />&nbsp;
+								<input type="submit" class="btn btn-default" name="preview" value="{tr}Preview{/tr}" />
 								<input type="submit" class="btn btn-default" name="save_post_exit" value="{tr}Save{/tr}" />
 							</div>
 						{/if *}

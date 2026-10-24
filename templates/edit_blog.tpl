@@ -80,7 +80,7 @@
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 						<div class="form-group submit">
-							<input type="submit" class="btn btn-default" name="preview" value="{tr}preview{/tr}" />&nbsp;
+							<input type="submit" class="btn btn-default" name="preview" value="{tr}preview{/tr}" />
 							<input type="submit" class="btn btn-default" name="save_blog" value="{tr}save{/tr}" />
 						</div>
 					{/legend}
