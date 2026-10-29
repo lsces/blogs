@@ -849,6 +849,9 @@ class BitBlogPost extends LibertyMime {
 					case 'sort_date_asc':
 					case 'sort_date_desc':
 						break;
+					case 'random':
+						// the database's random function, not a column: nothing to put in front of it
+						break;
 					case 'real_name_asc':
 					case 'real_name_desc':
 						$sortModePrefix = 'uu.';
