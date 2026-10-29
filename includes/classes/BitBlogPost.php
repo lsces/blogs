@@ -668,6 +668,15 @@ class BitBlogPost extends LibertyMime {
 		return $ret;
 	}
 
+	/** What a blog post list can sort by, on top of the content columns (the table aliases are bp, bpm and the shared ones). */
+	public static function getSortModeFields(): array {
+		return array_merge( parent::getSortModeFields(), [ 'publish_date', 'expire_date', 'post_id', 'date_added', 'hits', 'sort_date', 'real_name', 'registration_date' ] );
+	}
+
+	public static function getSortModeAliases(): array {
+		return array_merge( parent::getSortModeAliases(), [ 'bp', 'bpm' ] );
+	}
+
 	/**
 	* Returns include file that will
 	* @return string the fully specified path to file to be included
@@ -811,6 +820,10 @@ class BitBlogPost extends LibertyMime {
 		 * set before passing the list hash in if a different default is
 		 * desired from that in prepGetList. -wjames5
 		 */
+		// Only a column this list can sort by reaches the ORDER BY (see LibertyContent::isValidSortMode()); anything else falls back to the default order.
+		if( !empty( $pListHash['sort_mode'] ) && !static::isValidSortMode( $pListHash['sort_mode'] ) ) {
+			$pListHash['sort_mode'] = 'publish_date_desc';
+		}
 		if( empty( $pListHash['sort_mode'] ) ) {
 			$pListHash['sort_mode'] = 'publish_date_desc';
 			$sortModePrefix = 'bp';

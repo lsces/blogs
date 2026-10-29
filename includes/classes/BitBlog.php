@@ -220,7 +220,7 @@ class BitBlog extends LibertyMime {
 						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id`=bp.`content_id`)
 						INNER JOIN `".BIT_DB_PREFIX."blogs_posts_map` bpm ON (bp.`content_id`=bpm.`post_content_id`)
 						INNER JOIN `".BIT_DB_PREFIX."blogs` b on (bpm.`blog_content_id`=b.`content_id`)
-					WHERE b.`blog_id` = ? ORDER BY ".$this->mDb->convertSortMode( $pListHash['sort_mode'] );
+					WHERE b.`blog_id` = ? ORDER BY ".$this->convertSortMode( $pListHash['sort_mode'], 'last_modified_desc', BitBlogPost::getSortModeFields() );
 			if( $postId = $this->mDb->getOne($sql, [ $blogId ] ) ) {
 				$blogPost = new BitBlogPost( $postId );
 				$blogPost->load( null, $pListHash );
@@ -310,7 +310,7 @@ class BitBlog extends LibertyMime {
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON (uu.`user_id` = lc.`user_id`)
 				$joinSql
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON (lc.`content_id` = lch.`content_id`)
-			$whereSql order by ".$this->mDb->convertSortmode($pParamHash['sort_mode']);
+			$whereSql order by ".$this->convertSortMode( $pParamHash['sort_mode'], 'last_modified_desc', array_merge( static::getSortModeFields(), [ 'activity', 'hits', 'login', 'real_name', 'add_date', 'blog_id', 'user' ] ) );
 
 		$result = $this->mDb->query( $query, $bindVars, $pParamHash['max_records'], $pParamHash['offset'] );
 		$ret = [];
